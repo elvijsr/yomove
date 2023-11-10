@@ -25,3 +25,6 @@ jobs:
           cd frontend
           npm install
           npm run build
+          cd ../backend
+          npm install
+          pm2 restart yomove_backend
