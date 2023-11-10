@@ -47,6 +47,28 @@ function App() {
     }
   };
 
+  const calculateX = (previousAcceleration, acceleration) => {
+    return (alpha * previousAcceleration.x + (1 - alpha) * acceleration.x).toFixed(2)
+  };
+
+  const calculateY = (previousAcceleration, acceleration) => {
+    return (alpha * previousAcceleration.y + (1 - alpha) * acceleration.y).toFixed(2)
+  };
+
+  const calculateZ = (previousAcceleration, acceleration) => {
+    return (alpha * previousAcceleration.z + (1 - alpha) * acceleration.z).toFixed(2)
+  };
+
+  const calculateRMS = (previousAcceleration, acceleration) => {
+    const x = calculateX(previousAcceleration, acceleration);
+    const y = calculateY(previousAcceleration, acceleration);
+    const z = calculateZ(previousAcceleration, acceleration);
+
+    const sumOfSquares = x ** 2 + y ** 2 + z ** 2;
+    const rms = Math.sqrt(sumOfSquares / 3);
+    return rms.toFixed(2);
+  };
+
   useEffect(() => {
     const handleMotionEvent = (event) => {
       const motionData = {
@@ -65,9 +87,10 @@ function App() {
 
       setDeviceMotion((prevDeviceMotion) => ({
         acceleration: {
-          x: (alpha * prevDeviceMotion.acceleration.x + (1 - alpha) * motionData.acceleration.x).toFixed(2),
-          y: (alpha * prevDeviceMotion.acceleration.y + (1 - alpha) * motionData.acceleration.y).toFixed(2),
-          z: (alpha * prevDeviceMotion.acceleration.z + (1 - alpha) * motionData.acceleration.z).toFixed(2),
+          x: calculateX(prevDeviceMotion.acceleration, motionData.acceleration),
+          y: calculateY(prevDeviceMotion.acceleration, motionData.acceleration),
+          z: calculateZ(prevDeviceMotion.acceleration, motionData.acceleration),
+          rms: calculateRMS(prevDeviceMotion.acceleration, motionData.acceleration),
         },
         rotationRate: motionData.rotationRate,
         timestamp: motionData.timestamp,
@@ -180,6 +203,9 @@ function App() {
               </Typography>
               <Typography>
                 Z-axis: {deviceMotion.acceleration?.z} m/s²
+              </Typography>
+              <Typography>
+                RMS: {deviceMotion.acceleration?.rms} m/s²
               </Typography>
             </Grid>
             <Grid className="rotation-rate-info">
