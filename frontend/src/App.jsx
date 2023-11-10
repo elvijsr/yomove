@@ -9,6 +9,7 @@ function App() {
   const [isRecording, setIsRecording] = useState(false);
   const [recordedData, setRecordedData] = useState([]);
   const { username } = useOutletContext();
+  const alpha = 0.8;
 
   const askForPermission = async () => {
     let orientationPermissionGranted = false;
@@ -56,7 +57,15 @@ function App() {
         timestamp: event.timeStamp,
       };
 
-      setDeviceMotion(motionData);
+      setDeviceMotion((prevDeviceMotion) => ({
+        acceleration: {
+          x: alpha * prevDeviceMotion.acceleration.x + (1 - alpha) * motionData.acceleration.x,
+          y: alpha * prevDeviceMotion.acceleration.y + (1 - alpha) * motionData.acceleration.y,
+          z: alpha * prevDeviceMotion.acceleration.z + (1 - alpha) * motionData.acceleration.z,
+        },
+        rotationRate: motionData.rotationRate,
+        timestamp: motionData.timestamp,
+      }));
 
       if (isRecording) {
         setRecordedData((prevData) => [
