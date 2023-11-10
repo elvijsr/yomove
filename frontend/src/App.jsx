@@ -85,16 +85,20 @@ function App() {
         timestamp: event.timeStamp,
       };
 
-      setDeviceMotion((prevDeviceMotion) => ({
+      let rmsValue;
+
+      setDeviceMotion((prevDeviceMotion) => {
+        rmsValue = calculateRMS(prevDeviceMotion.acceleration, motionData.acceleration);
+        return ({
         acceleration: {
           x: calculateX(prevDeviceMotion.acceleration, motionData.acceleration),
           y: calculateY(prevDeviceMotion.acceleration, motionData.acceleration),
           z: calculateZ(prevDeviceMotion.acceleration, motionData.acceleration),
-          rms: calculateRMS(prevDeviceMotion.acceleration, motionData.acceleration),
+          rms: rmsValue,
         },
         rotationRate: motionData.rotationRate,
         timestamp: motionData.timestamp,
-      }));
+      })});
 
       if (isRecording) {
         setRecordedData((prevData) => [
@@ -103,6 +107,7 @@ function App() {
             x: motionData.acceleration.x,
             y: motionData.acceleration.y,
             z: motionData.acceleration.z,
+            rms: rmsValue,
             timestamp: motionData.timestamp,
           },
         ]);
@@ -145,10 +150,10 @@ function App() {
 
   const downloadCSV = () => {
     const csvRows = recordedData.map(
-      (data) => `${data.timestamp},${data.x},${data.y},${data.z}`
+      (data) => `${data.timestamp},${data.x},${data.y},${data.z},${data.rms}`
     );
     const csvContent =
-      "data:text/csv;charset=utf-8," + "Timestamp,X,Y,Z\n" + csvRows.join("\n");
+      "data:text/csv;charset=utf-8," + "Timestamp,X,Y,Z,RMS\n" + csvRows.join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
