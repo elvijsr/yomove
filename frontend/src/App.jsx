@@ -100,10 +100,11 @@ function App() {
         setRecordedData((prevData) => [
           ...prevData,
           {
-            x: motionData.acceleration.x,
-            y: motionData.acceleration.y,
-            z: motionData.acceleration.z,
-            timestamp: motionData.timestamp,
+            x: deviceMotion.acceleration.x,
+            y: deviceMotion.acceleration.y,
+            z: deviceMotion.acceleration.z,
+            rms: deviceMotion.rms,
+            timestamp: deviceMotion.timestamp,
           },
         ]);
       }
@@ -145,10 +146,10 @@ function App() {
 
   const downloadCSV = () => {
     const csvRows = recordedData.map(
-      (data) => `${data.timestamp},${data.x},${data.y},${data.z}`
+      (data) => `${data.timestamp},${data.x},${data.y},${data.z},${data.rms}`
     );
     const csvContent =
-      "data:text/csv;charset=utf-8," + "Timestamp,X,Y,Z\n" + csvRows.join("\n");
+      "data:text/csv;charset=utf-8," + "Timestamp,X,Y,Z,RMS\n" + csvRows.join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
