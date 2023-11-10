@@ -1,0 +1,26 @@
+name: Deploy to Home Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: SSH and Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOME_SERVER_IP }}
+        username: ${{ secrets.HOME_SERVER_USERNAME }}
+        key: ${{ secrets.HOME_SERVER_SSH_KEY }}
+        script: |
+          cd ~/yomove
+          git pull origin master
+          cd frontend
+          npm run build
