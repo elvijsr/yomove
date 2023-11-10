@@ -21,6 +21,6 @@ jobs:
         key: ${{ secrets.HOME_SERVER_SSH_KEY }}
         script: |
           cd ~/yomove
-          git pull origin master
+          git pull origin main
           cd frontend
           npm run build
