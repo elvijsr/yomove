@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Typography, Button, Box, Grid } from '@mui/joy';
+import { Typography, Button, ButtonGroup, Box, Grid } from '@mui/joy';
 
 function App() {
   const [deviceMotion, setDeviceMotion] = useState({});
@@ -118,18 +118,23 @@ function App() {
       )}
       {permissionGranted && (
         <Box>
-          <Button onClick={startRecording} disabled={isRecording}>
-            Start Recording
-          </Button>
-          <Button onClick={stopRecording} disabled={!isRecording}>
-            Stop Recording
-          </Button>
-          <Button
-            onClick={downloadCSV}
-            disabled={isRecording || recordedData.length === 0}
+          <ButtonGroup
+            variant="contained"
+            aria-label="outlined primary button group"
           >
-            Download CSV
-          </Button>
+            <Button onClick={startRecording} disabled={isRecording}>
+              Start Recording
+            </Button>
+            <Button onClick={stopRecording} disabled={!isRecording}>
+              Stop Recording
+            </Button>
+            <Button
+              onClick={downloadCSV}
+              disabled={isRecording || recordedData.length === 0}
+            >
+              Download CSV
+            </Button>
+          </ButtonGroup>
 
           <Grid
             container
