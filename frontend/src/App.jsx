@@ -65,9 +65,9 @@ function App() {
 
       setDeviceMotion((prevDeviceMotion) => ({
         acceleration: {
-          x: alpha * prevDeviceMotion.acceleration.x + (1 - alpha) * motionData.acceleration.x,
-          y: alpha * prevDeviceMotion.acceleration.y + (1 - alpha) * motionData.acceleration.y,
-          z: alpha * prevDeviceMotion.acceleration.z + (1 - alpha) * motionData.acceleration.z,
+          x: (alpha * prevDeviceMotion.acceleration.x + (1 - alpha) * motionData.acceleration.x).toFixed(2),
+          y: (alpha * prevDeviceMotion.acceleration.y + (1 - alpha) * motionData.acceleration.y).toFixed(2),
+          z: (alpha * prevDeviceMotion.acceleration.z + (1 - alpha) * motionData.acceleration.z).toFixed(2),
         },
         rotationRate: motionData.rotationRate,
         timestamp: motionData.timestamp,
