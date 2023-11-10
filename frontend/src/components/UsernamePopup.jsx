@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Sheet, Input, Button } from "@mui/joy";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
+import toast from "react-hot-toast";
 
 // eslint-disable-next-line react/prop-types
 function UsernamePopup({ onSubmit }) {
@@ -10,6 +11,7 @@ function UsernamePopup({ onSubmit }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     onSubmit(inputValue);
+    toast.success(`Hi ${inputValue}`, { icon: "👏" });
   };
 
   return (

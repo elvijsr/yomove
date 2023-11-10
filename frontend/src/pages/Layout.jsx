@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Modal, Box, Button } from "@mui/joy";
 import UsernamePopup from "../components/UsernamePopup";
+import { Toaster } from "react-hot-toast";
 
 function Layout() {
   const [username, setUsername] = useState(
@@ -43,6 +44,7 @@ function Layout() {
         )}
       </Box>
       <Outlet context={{ username }} />
+      <Toaster position="bottom-center" />
     </>
   );
 }
