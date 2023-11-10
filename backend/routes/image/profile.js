@@ -1,22 +1,12 @@
 const Router = require("koa-router");
 const router = new Router();
 const pgp = require("pg-promise")();
-const bodyParser = require('koa-bodyparser');
-const OpenAI = require('openai');
-//const { openai } = require('openai'); // Replace with the correct import for OpenAI SDK
+const bodyParser = require("koa-bodyparser");
+const OpenAI = require("openai");
 // const { v2 as cloudinary } = require('cloudinary');
-const cloudinary = require('cloudinary').v2;
+const cloudinary = require("cloudinary").v2;
 
-const Configuration = OpenAI.Configuration;
-const OpenAIApi = OpenAI.OpenAIApi;
-
-const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-
-const openai = new OpenAIApi(configuration);
-
-
+const openai = new OpenAI();
 
 // Database connection details
 console.log(process.env.DB_HOST);
@@ -34,7 +24,7 @@ const db = pgp(connection);
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 // router.post('/generateimage', async (ctx) => {
@@ -49,7 +39,7 @@ cloudinary.config({
 //       n: n || 1,
 //       size: size || '1024x1024',
 //     });
-router.post('/generateimage', async (ctx) => {
+router.post("/generateimage", async (ctx) => {
   console.log("Generating image started"); // Log when the function starts
 
   try {
@@ -59,16 +49,21 @@ router.post('/generateimage', async (ctx) => {
     // Log the received request data
     console.log(`Received data: prompt=${prompt}`);
 
-    const response1 = await openai.listEngines();
-    console.log(response1)
+    const image = await openai.images.generate({
+      //model: "dall-e-3",
+      prompt,
+      size: "256x256",
+    });
+
+    console.log(image.data);
 
     // Generate image using OpenAI's API
-    const response = await openai.createImage({
-      model: 'dall-e-3',
-      prompt,
-      n: 1,
-      size: '1024x1024',
-    });
+    // const response = await openai.createImage({
+    //   model: 'dall-e-3',
+    //   prompt,
+    //   n: 1,
+    //   size: '1024x1024',
+    // });
 
     // Log the response from OpenAI
     console.log("Response from OpenAI:", response);
@@ -78,12 +73,11 @@ router.post('/generateimage', async (ctx) => {
     // Log the error if any
     console.error("Error occurred:", error);
     ctx.status = 400;
-    ctx.body = { error: 'Error generating or uploading image' };
+    ctx.body = { error: "Error generating or uploading image" };
   }
 
-
-    // Get the image URL from the response
-    const imageUrl = response.data.data[0].url;
+  // Get the image URL from the response
+  const imageUrl = response.data.data[0].url;
 
   //   // Upload the image to Cloudinary
   //   const uploadResponse = await cloudinary.uploader.upload(imageUrl, {
