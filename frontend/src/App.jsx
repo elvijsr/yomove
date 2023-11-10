@@ -3,7 +3,13 @@ import { useState, useEffect } from "react";
 import { Typography, Button, ButtonGroup, Box, Grid } from "@mui/joy";
 
 function App() {
-  const [deviceMotion, setDeviceMotion] = useState({});
+  const [deviceMotion, setDeviceMotion] = useState({
+    acceleration: {
+      x: 0,
+      y: 0,
+      z: 0,
+    }
+  });
   const [deviceOrientation, setDeviceOrientation] = useState({});
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
