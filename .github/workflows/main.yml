@@ -23,4 +23,5 @@ jobs:
           cd ~/yomove
           git pull origin main
           cd frontend
+          npm install
           npm run build
