@@ -1,5 +1,6 @@
+import { useOutletContext } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Typography, Button, ButtonGroup, Box, Grid } from '@mui/joy';
+import { Typography, Button, ButtonGroup, Box, Grid } from "@mui/joy";
 
 function App() {
   const [deviceMotion, setDeviceMotion] = useState({});
@@ -7,6 +8,7 @@ function App() {
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recordedData, setRecordedData] = useState([]);
+  const { username } = useOutletContext();
 
   const askForPermission = async () => {
     let orientationPermissionGranted = false;
@@ -14,7 +16,8 @@ function App() {
 
     try {
       if (typeof DeviceOrientationEvent.requestPermission === "function") {
-        const permissionState = await DeviceOrientationEvent.requestPermission();
+        const permissionState =
+          await DeviceOrientationEvent.requestPermission();
         orientationPermissionGranted = permissionState === "granted";
       } else {
         orientationPermissionGranted = true;
@@ -77,7 +80,11 @@ function App() {
     };
 
     if (permissionGranted) {
-      window.addEventListener("deviceorientation", handleOrientationEvent, true);
+      window.addEventListener(
+        "deviceorientation",
+        handleOrientationEvent,
+        true
+      );
       window.addEventListener("devicemotion", handleMotionEvent, true);
     }
 
@@ -99,8 +106,11 @@ function App() {
   };
 
   const downloadCSV = () => {
-    const csvRows = recordedData.map((data) => `${data.timestamp},${data.x},${data.y},${data.z}`);
-    const csvContent = "data:text/csv;charset=utf-8," + "Timestamp,X,Y,Z\n" + csvRows.join("\n");
+    const csvRows = recordedData.map(
+      (data) => `${data.timestamp},${data.x},${data.y},${data.z}`
+    );
+    const csvContent =
+      "data:text/csv;charset=utf-8," + "Timestamp,X,Y,Z\n" + csvRows.join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -112,7 +122,7 @@ function App() {
 
   return (
     <>
-      <Typography level="h1">YoMove</Typography>
+      <Typography level="h1">YoMove, {username}</Typography>
       {!permissionGranted && (
         <Button onClick={askForPermission}>Enable Device Sensors</Button>
       )}
