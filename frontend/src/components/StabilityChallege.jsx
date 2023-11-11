@@ -71,7 +71,7 @@ function StabilityChallenge({ lobby, finishChallenge }) {
     const average =
       scores.reduce((sum, value) => sum + value, 0) / scores.length;
 
-    const finalScore = 420; //Math.round(average);
+    const finalScore = Math.round(average);
 
     try {
       const result = await submitResult({
