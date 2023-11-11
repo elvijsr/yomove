@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.jsx";
 import Layout from "./pages/Layout.jsx";
 import Profile from "./pages/Profile.jsx";
+import StabilityChallenge from "./components/StabilityChallege.jsx";
 import { Typography } from "@mui/joy";
 import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
 import "@fontsource/nunito/900-italic.css";
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/stable",
+        element: <StabilityChallenge />,
       },
     ],
   },
