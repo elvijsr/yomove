@@ -17,7 +17,7 @@ function Lobby() {
 
   const handleFinishChallenge = () => {
     setChallengeRecording(false);
-    getLobby(lobbyParam);
+    getLobby(lobbyData.lobby.lobby_name);
   };
 
   useEffect(() => {
