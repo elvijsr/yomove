@@ -17,10 +17,10 @@ function Lobby() {
 
   const handleFinishChallenge = () => {
     setChallengeRecording(false);
-    getLobby(lobbyData.lobby.lobby_name);
+    fetchLobby();
   };
 
-  useEffect(() => {
+  const fetchLobby = async () => {
     getLobby(lobbyParam)
       .then((data) => {
         setLobbyData(data);
@@ -28,6 +28,10 @@ function Lobby() {
       .catch((error) => {
         console.error("Error fetching challenges:", error);
       });
+  };
+
+  useEffect(() => {
+    fetchLobby();
   }, [lobbyParam]);
 
   return (
