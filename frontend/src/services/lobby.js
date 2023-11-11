@@ -11,4 +11,14 @@ const createLobby = async (challenge_id) => {
   }
 };
 
-export { createLobby };
+const getLobby = async (lobby_id) => {
+  try {
+    const response = await apiPost("/get-lobby", { lobby_id });
+    return response; // contains lobby id
+  } catch (error) {
+    console.error("Failed to fetch lobbies", error);
+    throw error;
+  }
+};
+
+export { createLobby, getLobby };
