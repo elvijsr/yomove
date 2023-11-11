@@ -11,7 +11,7 @@ function Layout() {
     localStorage.getItem("username") || ""
   );
   const [showPopup, setShowPopup] = useState(false);
-  const [permissionsGranted, setPermissionsGranted] = useState(false);
+  const [permissionsGranted, setPermissionsGranted] = useState(typeof DeviceMotionEvent.requestPermission !== "function");
 
   const navigate = useNavigate();
 
