@@ -11,17 +11,18 @@ function StabilityChallenge() {
   });
   const [isRecording, setIsRecording] = useState(false);
   const [recordedData, setRecordedData] = useState([]);
+  const [countdown, setCountdown] = useState(null);
+  const [recordingTimer, setRecordingTimer] = useState(null);
+
   const alpha = 0.8;
   const rmsMax = 2;
   const rmsMin = 0;
 
   const startRecording = () => {
-    setIsRecording((prevIsRecording) => !prevIsRecording);
-    setRecordedData([]);
-  };
-
-  const stopRecording = () => {
-    setIsRecording((prevIsRecording) => !prevIsRecording);
+    if (countdown === null || countdown === 0) {
+      setRecordedData([]);
+      setCountdown(3);
+    }
   };
 
   const applyLowPathFilter = (prev, curr) => {
@@ -70,17 +71,35 @@ function StabilityChallenge() {
   };
 
   useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (countdown === 0) {
+      setIsRecording(true);
+      setRecordingTimer(10);
+    }
+  }, [countdown]);
+
+  useEffect(() => {
+    if (recordingTimer !== null && recordingTimer !== 0 && isRecording) {
+      const timer = setTimeout(() => {
+        setRecordingTimer((prevRecordingTimer) => prevRecordingTimer - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (recordingTimer === 0) {
+      setIsRecording(false);
+    }
+  }, [recordingTimer]);
+
+  useEffect(() => {
     const handleMotionEvent = (event) => {
       const motionData = {
         acceleration: {
           x: event.acceleration.x?.toFixed(2),
           y: event.acceleration.y?.toFixed(2),
           z: event.acceleration.z?.toFixed(2),
-        },
-        rotationRate: {
-          alpha: event.rotationRate.alpha?.toFixed(2),
-          beta: event.rotationRate.beta?.toFixed(2),
-          gamma: event.rotationRate.gamma?.toFixed(2),
         },
         timestamp: event.timeStamp,
       };
@@ -107,7 +126,6 @@ function StabilityChallenge() {
             rms: rms,
             score: calculateScore(rms),
           },
-          rotationRate: motionData.rotationRate,
           timestamp: motionData.timestamp,
         };
       });
@@ -138,24 +156,29 @@ function StabilityChallenge() {
 
   return (
     <>
-        <ButtonGroup
-          variant="contained"
-          aria-label="outlined primary button group"
-          sx={{ mt: 5 }}
+      <ButtonGroup
+        variant="contained"
+        aria-label="outlined primary button group"
+        sx={{ mt: 5 }}
+      >
+        <Button
+          onClick={startRecording}
+          disabled={isRecording || countdown > 0}
         >
-          <Button onClick={startRecording} disabled={isRecording}>
-            Start Recording
-          </Button>
-          <Button onClick={stopRecording} disabled={!isRecording}>
-            Stop Recording
-          </Button>
-        </ButtonGroup>
+          Start Recording
+        </Button>
+      </ButtonGroup>
 
-        {!isRecording && recordedData.length > 0 && (
-          <Typography level="h2">
-            Score: {calculateStabilityScore()}
-          </Typography>
-        )}
+      {countdown !== null && countdown !== 0 && (
+        <Typography level="h2">Countdown: {countdown}</Typography>
+      )}
+      {recordingTimer !== null && recordingTimer !== 0 && (
+        <Typography level="h2">Recording: {recordingTimer}</Typography>
+      )}
+
+      {!isRecording && recordedData.length > 0 && (
+        <Typography level="h2">Score: {calculateStabilityScore()}</Typography>
+      )}
     </>
   );
 }
