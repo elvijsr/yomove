@@ -2,20 +2,20 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sheet, Input, Button, Typography, Box, Card } from "@mui/joy";
 import ModalClose from "@mui/joy/ModalClose";
-import ChallangeImage from "../assets/challenges/flamingo.jpeg";
+import ChallengeImage from "../assets/challenges/flamingo.jpeg";
 import { createLobby } from "../services/lobby";
 
 // eslint-disable-next-line react/prop-types
 function ChallengeInfo({ challenge }) {
   const [inputValue, setInputValue] = useState("");
-  const [lobbyId, setLobbyId] = useState("");
+  const [lobbyName, setLobbyName] = useState("");
   const navigate = useNavigate();
 
   const handleStartLobby = async () => {
     try {
       const response = await createLobby(challenge.id);
       // Assuming the response contains the lobby ID
-      setLobbyId(response.lobbyName);
+      setLobbyName(response.lobbyName);
       navigate(`/lobby/${response.lobbyName}`);
     } catch (error) {
       console.error("Error creating lobby:", error);
@@ -47,7 +47,7 @@ function ChallengeInfo({ challenge }) {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            backgroundImage: `url(${ChallangeImage})`,
+            backgroundImage: `url(${ChallengeImage})`,
             backgroundSize: "cover",
             aspectRatio: "1/1",
           }}
@@ -65,7 +65,7 @@ function ChallengeInfo({ challenge }) {
       </Card>
 
       <Button sx={{ fontSize: 30 }} onClick={handleStartLobby}>
-        START CHALLANGE
+        START CHALLENGE
       </Button>
     </Sheet>
   );

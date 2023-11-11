@@ -11,6 +11,7 @@ import { Typography } from "@mui/joy";
 import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
 import "@fontsource/nunito/900-italic.css";
 import SquatChallenge from "./components/SquatChallenge.jsx";
+import JumpChallenge from "./components/JumpChallenge.jsx";
 
 const theme = extendTheme({
   typography: {
@@ -93,8 +94,12 @@ const router = createBrowserRouter([
         element: <SquatChallenge />,
       },
       {
-        path: "/lobby/:lobbyId",
+        path: "/lobby/:lobbyParam",
         element: <Lobby />,
+      },
+      {
+        path: "/jump",
+        element: <JumpChallenge />,
       },
     ],
   },

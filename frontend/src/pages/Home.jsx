@@ -3,7 +3,7 @@ import { Router, useOutletContext } from "react-router-dom";
 import { Typography, Box, Card, Modal } from "@mui/joy";
 import ChallengeInfo from "../components/ChallengeInfo";
 import { fetchChallenges } from "../services/challenges";
-import ChallangeImage from "../assets/challenges/flamingo.jpeg";
+import ChallengeImage from "../assets/challenges/flamingo.jpeg";
 import theme from "../main.jsx";
 
 function Home() {
@@ -46,7 +46,7 @@ function Home() {
             cursor: "pointer",
             width: "100%",
             alignItems: "flex-end",
-            backgroundImage: `url(${ChallangeImage})`,
+            backgroundImage: `url(${ChallengeImage})`,
             aspectRatio: "2/1",
             backgroundSize: "cover",
             backgroundPosition: "center",
