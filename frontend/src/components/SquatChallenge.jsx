@@ -12,7 +12,7 @@ function SquatChallenge() {
   });
   const [isRecording, setIsRecording] = useState(false);
   const [squatCount, setSquatCount] = useState(0);
-  const [squatFinalCount, setSquatFinalCount] = useState(0);
+  const [squatFinalCount, setSquatFinalCount] = useState(null);
   const [countdown, setCountdown] = useState(null);
   const [recordingTimer, setRecordingTimer] = useState(null);
   const [lastSquatTime, setLastSquatTime] = useState(null);
@@ -39,6 +39,17 @@ function SquatChallenge() {
       setLastSquatTime(squatTime);
     }
   }, 800);
+
+  const calculateScore = (squatAmount) => {
+    if (squatAmount <= 0) {
+      return 0;
+    }
+    if (squatAmount >= 10) {
+      return 100;
+    }
+
+    return squatAmount * 10;
+  };
 
   const handleMotionEvent = (event) => {
     const motionData = {
@@ -98,7 +109,7 @@ function SquatChallenge() {
         window.removeEventListener("devicemotion", handleMotionEvent);
       };
     } else {
-        setSquatFinalCount(squatCount);
+      setSquatFinalCount(squatCount);
     }
   }, [isRecording]);
 
@@ -115,9 +126,15 @@ function SquatChallenge() {
         <Typography level="h2">Recording: {recordingTimer}</Typography>
       )}
 
-      <Typography level="h2">Squat Count: {squatCount}</Typography>
-      {!isRecording && (
-        <Typography level="h2">Squat Final Count: {squatFinalCount}</Typography>
+      {!isRecording && squatFinalCount !== null && (
+        <>
+          <Typography level="h2">
+            Squat Final Count: {squatFinalCount}
+          </Typography>
+          <Typography level="h2">
+            Challenge score: {calculateScore(squatFinalCount)}
+          </Typography>
+        </>
       )}
     </>
   );
