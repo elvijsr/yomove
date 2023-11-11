@@ -6,6 +6,7 @@ function SquatChallenge() {
   const [countdown, setCountdown] = useState(null);
   const [recordingTimer, setRecordingTimer] = useState(null);
   const [squatCount, setSquatCount] = useState(0);
+  const [squatTimestamp, setSquatTimestamp] = useState(null);
 
   const startRecording = () => {
     if (countdown === null || countdown === 0) {
@@ -15,14 +16,26 @@ function SquatChallenge() {
   };
 
   const detectSquat = (yAcceleration, timestamp) => {
+    let initialDetection = false;
+
+    if (squatTimestamp === null) {
+        setSquatTimestamp(timestamp);
+        initialDetection = true;
+    }
+
     // Adjust this threshold based on your sensor data characteristics
     const squatThreshold = -1.5; // Example threshold for downward motion in y-axis
 
-    const isSquat = yAcceleration < squatThreshold && timestamp - lastSquatTimestamp > 500;
+    const isSquat =
+      yAcceleration < squatThreshold &&
+      (initialDetection || timestamp - squatTimestamp > 500); // Minimum time between squats in milliseconds
+
+    if (isSquat) {
+        setSquatTimestamp(timestamp); // Update lastSquatTimestamp
+    }
+
     return isSquat;
   };
-
-  let lastSquatTimestamp = 0;
 
   const handleMotionEvent = (event) => {
     const yAcceleration = event.acceleration.y;
@@ -31,7 +44,6 @@ function SquatChallenge() {
 
     if (isRecording && isSquat) {
       setSquatCount((prevCount) => prevCount + 1);
-      lastSquatTimestamp = event.acceleration.timestamp;
     }
   };
 
