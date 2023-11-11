@@ -17,6 +17,12 @@ const theme = extendTheme({
       WebkitBackgroundClip: "text",
       WebkitTextFillColor: "transparent",
     },
+    h2: {
+      background:
+        "linear-gradient(90deg, rgba(255,179,71,1) 0%, rgba(255,204,51,1) 100%);",
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+    },
   },
   fontFamily: {
     display: "Nunito",

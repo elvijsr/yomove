@@ -1,10 +1,11 @@
 const BASE_URL = "https://yomove.xyz/api"; // Replace with your actual base URL
+//const BASE_URL = "http://127.0.0.1:56579";
 
 const getHeaders = () => {
   const username = localStorage.getItem("username");
-  if (!username) {
-    throw new Error("Username not found in localStorage");
-  }
+  // if (!username) {
+  //   throw new Error("Username not found in localStorage");
+  // }
 
   return {
     "Content-Type": "application/json",
@@ -30,10 +31,8 @@ const fetchWithUsername = async (
   const response = await fetch(url, config);
 
   if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(
-      `HTTP error! status: ${response.status}, body: ${errorBody}`
-    );
+    const errorBody = await response.json();
+    throw new Error(errorBody.error);
   }
 
   return response.json();
