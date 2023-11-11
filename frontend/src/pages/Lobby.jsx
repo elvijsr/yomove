@@ -11,6 +11,8 @@ function Lobby() {
   const { lobbyParam } = useParams();
   const [lobbyData, setLobbyData] = useState({ lobby: {}, users: [] });
   const [challengeRecording, setChallengeRecording] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { username } = useOutletContext();
 
   const recordChallenge = () => {
     setChallengeRecording(true);
@@ -25,7 +27,9 @@ function Lobby() {
     try {
       const data = await getLobby(lobbyParam);
       setLobbyData(data);
-      console.log("Fetching lobby:", data.lobby.id);
+      if (data.lobby.admin === localStorage.getItem("username")) {
+        setIsAdmin(true);
+      }
     } catch (error) {
       console.error("Error fetching challenges:", error);
     }
@@ -41,13 +45,12 @@ function Lobby() {
   };
 
   const joinLobbyIfNotJoined = async () => {
-    const currentUser = localStorage.getItem("username");
-    console.log("joinLobbyIfNotJoined user:", currentUser);
+    console.log("joinLobbyIfNotJoined user:");
     console.log("joinLobbyIfNotJoined lobby id:", lobbyData.lobby.id);
 
     // Check if the user is already in the lobby
     const userAlreadyInLobby = lobbyData.users.some(
-      (user) => user.username === currentUser
+      (user) => user.username === username
     );
 
     if (!userAlreadyInLobby) {
@@ -84,7 +87,7 @@ function Lobby() {
 
     // Clean up the interval when the component is unmounted
     return () => clearInterval(intervalId);
-  }, [lobbyData.lobby.id]); // Add lobbyData.lobby.id to dependency array
+  }, [lobbyData.lobby.id, username]); // Add lobbyData.lobby.id to dependency array
 
   return (
     <Box
