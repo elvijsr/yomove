@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Typography, Button } from "@mui/joy";
+import { debounce } from "lodash";
 
 function SquatChallenge() {
   const [deviceMotion, setDeviceMotion] = useState({
@@ -16,7 +17,7 @@ function SquatChallenge() {
   const [lastSquatTime, setLastSquatTime] = useState(null);
   const [previousAcceleration, setPreviousAcceleration] = useState(0);
 
-  const squatThreshold = -10; // This value may need to be adjusted based on the specific behavior of the device's accelerometer
+  const squatThreshold = -5; // This value may need to be adjusted based on the specific behavior of the device's accelerometer
   const squatMinTime = 2000; // Minimum time between squats in milliseconds
   const movingAverageAlpha = 0.8; // Adjust this value to change the smoothing effect
 
@@ -27,6 +28,16 @@ function SquatChallenge() {
     }
   };
 
+  const debouncedHandleSquat = debounce((squat) => {
+    if (
+      lastSquatTime === null ||
+      new Date().getTime() - lastSquatTime > squatMinTime
+    ) {
+      setSquatCount((prevSquatCount) => prevSquatCount + 1);
+      setLastSquatTime(new Date().getTime());
+    }
+  }, 500); // Debounce time in milliseconds
+
   const handleMotionEvent = (event) => {
     const motionData = {
       acceleration: {
@@ -36,25 +47,19 @@ function SquatChallenge() {
       },
     };
 
-    const currentTime = new Date().getTime();
-
+    // Apply a moving average filter to the y-axis acceleration data
     const filteredAcceleration =
       movingAverageAlpha * previousAcceleration +
       (1 - movingAverageAlpha) * motionData.acceleration.y;
     setPreviousAcceleration(filteredAcceleration);
 
+    // Use a peak detection algorithm to identify the highest points in the y-axis acceleration data
     if (
       filteredAcceleration < squatThreshold &&
       isRecording &&
       filteredAcceleration < previousAcceleration
     ) {
-      if (
-        lastSquatTime === null ||
-        currentTime - lastSquatTime > squatMinTime
-      ) {
-        setSquatCount((prevSquatCount) => prevSquatCount + 1);
-        setLastSquatTime(currentTime);
-      }
+      debouncedHandleSquat();
     }
 
     setDeviceMotion(motionData);
