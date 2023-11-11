@@ -8,6 +8,7 @@ import StabilityChallenge from "./components/StabilityChallege.jsx";
 import { Typography } from "@mui/joy";
 import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
 import "@fontsource/nunito/900-italic.css";
+import SquatChallenge from "./components/SquatChallenge.jsx";
 
 const theme = extendTheme({
   typography: {
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
         path: "/stable",
         element: <StabilityChallenge />,
       },
+      {
+        path: "/squat",
+        element: <SquatChallenge />,
+      },
     ],
   },
 ]);
@@ -77,12 +82,6 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <CssVarsProvider theme={theme}>
-      <Typography
-        sx={{ color: theme.colorSchemes.light.palette.gradient.primary }}
-        level="h1"
-      >
-        YoMove!
-      </Typography>
       <RouterProvider router={router} />
     </CssVarsProvider>
   </React.StrictMode>
