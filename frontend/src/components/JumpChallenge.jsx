@@ -19,7 +19,7 @@ function JumpChallenge() {
 
   useEffect(() => {
     isRecordingRef.current = isRecording;
-   }, [isRecording]);
+  }, [isRecording]);
 
   const startRecording = () => {
     if (countdown === null || countdown === 0) {
@@ -53,10 +53,23 @@ function JumpChallenge() {
     const rms = Math.sqrt(sumOfSquares / 3);
 
     if (isRecordingRef.current) {
-      setPeakRMS(prevPeakRMS => Math.max(prevPeakRMS, rms));
+      setPeakRMS((prevPeakRMS) => Math.max(prevPeakRMS, rms));
     }
 
     return rms.toFixed(2);
+  };
+
+  const calculateScore = (peakRMS) => {
+    const minRMS = 0;
+    const maxRMS = 30;
+    const minScore = 0;
+    const maxScore = 100;
+
+    if (peakRMS > maxRMS) {
+      return maxScore;
+    }
+
+    return Math.round(((peakRMS - minRMS) / (maxRMS - minRMS)) * (maxScore - minScore) + minScore);
   };
 
   useEffect(() => {
@@ -178,7 +191,10 @@ function JumpChallenge() {
       )}
 
       {!isRecording && peakRMS > 0 && (
-        <Typography level="h2">Peak RMS: {peakRMS.toFixed(2)}</Typography>
+        <Typography level="h2">
+          Peak RMS: {peakRMS.toFixed(2)}
+          Score: {calculateScore(peakRMS)}
+        </Typography>
       )}
     </Box>
   );
