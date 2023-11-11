@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Typography, Button } from "@mui/joy";
 import { debounce } from "lodash";
 
@@ -28,16 +28,26 @@ function SquatChallenge() {
     }
   };
 
-  const debouncedHandleSquat = debounce(() => {
-    let squatTime = new Date().getTime();
-    if (
-      lastSquatTime === null ||
-      squatTime - lastSquatTime > squatMinTime
-    ) {
-      setSquatCount((prevSquatCount) => prevSquatCount + 1);
-      setLastSquatTime(squatTime);
+  const debouncedHandleSquat = useCallback(
+    debounce(() => {
+      let squatTime = new Date().getTime();
+      if (lastSquatTime === null || squatTime - lastSquatTime > squatMinTime) {
+        setSquatCount((prevSquatCount) => prevSquatCount + 1);
+        setLastSquatTime(squatTime);
+      }
+    }, 800),
+    []
+  );
+
+  useEffect(() => {
+    if (recordingTimer === 0) {
+      debouncedHandleSquat.cancel();
     }
-  }, 800);
+
+    return () => {
+      debouncedHandleSquat.cancel();
+    };
+  }, [recordingTimer, debouncedHandleSquat]);
 
   const handleMotionEvent = (event) => {
     const motionData = {
