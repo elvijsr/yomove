@@ -58,23 +58,27 @@ function SquatChallenge() {
       },
     };
 
-    // Apply a moving average filter to the y-axis acceleration data
-    const filteredAcceleration =
-      movingAverageAlpha * previousAcceleration +
-      (1 - movingAverageAlpha) * motionData.acceleration.y;
-    setPreviousAcceleration(filteredAcceleration);
-
-    // Use a peak detection algorithm to identify the highest points in the y-axis acceleration data
-    if (
-      filteredAcceleration < squatThreshold &&
-      isRecording &&
-      filteredAcceleration < previousAcceleration
-    ) {
-      debouncedHandleSquat();
+    if (isRecording) {
+      setDeviceMotion(motionData);
     }
-
-    setDeviceMotion(motionData);
   };
+
+  useEffect(() => {
+    if (isRecording) {
+      const filteredAcceleration =
+        movingAverageAlpha * previousAcceleration +
+        (1 - movingAverageAlpha) * deviceMotion.acceleration.y;
+      setPreviousAcceleration(filteredAcceleration);
+
+      if (
+        filteredAcceleration < squatThreshold &&
+        isRecording &&
+        filteredAcceleration < previousAcceleration
+      ) {
+        debouncedHandleSquat();
+      }
+    }
+  }, [isRecording, deviceMotion]);
 
   useEffect(() => {
     if (countdown > 0) {
