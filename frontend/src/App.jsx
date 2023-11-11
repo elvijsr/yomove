@@ -155,7 +155,7 @@ function App() {
           z: deviceMotion.acceleration.z,
           rms: deviceMotion.acceleration.rms,
           score: deviceMotion.acceleration.score,
-          timestamp: deviceMotion.acceleration.timestamp,
+          timestamp: deviceMotion.timestamp,
         },
       ]);
     }
