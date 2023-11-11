@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { Router, useOutletContext, useParams } from "react-router-dom";
-import { Typography, Box, Card, Button } from "@mui/joy";
-import { getLobby } from "../services/lobby";
+import { Typography, Box, Card, Button, Modal } from "@mui/joy";
+import { getLobby, joinLobby } from "../services/lobby";
+import Invite from "../components/Invite";
 import ChallengeImage from "../assets/challenges/flamingo.jpeg";
 import StabilityChallenge from "../components/StabilityChallege";
 
@@ -30,6 +31,36 @@ function Lobby() {
       });
   };
 
+  const [showInvitePopup, setShowInvitePopup] = useState(false);
+
+  const showInvite = () => {
+    setShowInvitePopup(!showInvitePopup);
+  };
+  const hideInvite = () => {
+    setShowInvitePopup(false);
+  };
+
+  const joinLobbyIfNotJoined = async () => {
+    const currentUser = localStorage.getItem("username");
+
+    if (
+      lobbyData.users.length > 0 &&
+      !lobbyData.users.some((user) => user.username === currentUser)
+    ) {
+      try {
+        await joinLobby(lobbyData.lobby.id); // Call your joinLobby function here
+        fetchLobby(); // Fetch lobby data after joining
+      } catch (error) {
+        console.error("Error joining lobby:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchLobby();
+    joinLobbyIfNotJoined(); // Call the function when the component mounts
+  }, [lobbyParam]);
+
   useEffect(() => {
     fetchLobby();
   }, [lobbyParam]);
@@ -38,6 +69,9 @@ function Lobby() {
     <Box
       sx={{ m: 1, height: "100%", display: "flex", flexDirection: "column" }}
     >
+      <Modal open={showInvitePopup} onClose={hideInvite}>
+        <Invite lobby={lobbyData} />
+      </Modal>
       {lobbyData.users.length > 0 && (
         <Card variant="flat">
           {!challengeRecording && (
@@ -77,7 +111,10 @@ function Lobby() {
             gap: 2,
           }}
         >
-          <Typography level="h1">Players</Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography level="h1">Players</Typography>
+            <Button onClick={showInvite}>INVITE</Button>
+          </Box>
           <Box
             sx={{
               flexGrow: 1,
