@@ -29,14 +29,15 @@ function SquatChallenge() {
   };
 
   const debouncedHandleSquat = debounce((squat) => {
+    let squatTime = new Date().getTime();
     if (
       lastSquatTime === null ||
-      new Date().getTime() - lastSquatTime > squatMinTime
+      squatTime - lastSquatTime > squatMinTime
     ) {
       setSquatCount((prevSquatCount) => prevSquatCount + 1);
-      setLastSquatTime(new Date().getTime());
+      setLastSquatTime(squatTime);
     }
-  }, 500);
+  }, 100);
 
   const handleMotionEvent = (event) => {
     const motionData = {
