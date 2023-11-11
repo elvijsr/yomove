@@ -47,8 +47,8 @@ function JumpChallenge() {
     const sumOfSquares = x ** 2 + y ** 2 + z ** 2;
     const rms = Math.sqrt(sumOfSquares / 3);
 
-    if (rms > peakRMS) {
-      setPeakRMS(rms);
+    if (isRecording) {
+      setPeakRMS(prevPeakRMS => Math.max(prevPeakRMS, rms));
     }
 
     return rms.toFixed(2);
