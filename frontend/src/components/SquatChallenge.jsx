@@ -27,11 +27,11 @@ function SquatChallenge() {
     });
 
     // Adjust this threshold based on your sensor data characteristics
-    const squatThreshold = -1.5; // Example threshold for downward motion in y-axis
+    const squatThreshold = -10; // Example threshold for downward motion in y-axis
 
     const isSquat =
       yAcceleration < squatThreshold &&
-      timestamp - squatTimestamp > 500; // Minimum time between squats in milliseconds
+      timestamp - squatTimestamp > 1000; // Minimum time between squats in milliseconds
 
     return isSquat;
   };
@@ -70,7 +70,9 @@ function SquatChallenge() {
   }, [recordingTimer, isRecording]);
 
   useEffect(() => {
-    window.addEventListener("devicemotion", handleMotionEvent, true);
+    if (isRecording) {
+        window.addEventListener("devicemotion", handleMotionEvent, true);
+    }
 
     return () => {
       window.removeEventListener("devicemotion", handleMotionEvent);
