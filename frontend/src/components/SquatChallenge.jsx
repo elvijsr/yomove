@@ -12,6 +12,7 @@ function SquatChallenge() {
   });
   const [isRecording, setIsRecording] = useState(false);
   const [squatCount, setSquatCount] = useState(0);
+  const [squatFinalCount, setSquatFinalCount] = useState(0);
   const [countdown, setCountdown] = useState(null);
   const [recordingTimer, setRecordingTimer] = useState(null);
   const [lastSquatTime, setLastSquatTime] = useState(null);
@@ -96,6 +97,8 @@ function SquatChallenge() {
       return () => {
         window.removeEventListener("devicemotion", handleMotionEvent);
       };
+    } else {
+        setSquatFinalCount(squatCount);
     }
   }, [isRecording]);
 
@@ -113,6 +116,9 @@ function SquatChallenge() {
       )}
 
       <Typography level="h2">Squat Count: {squatCount}</Typography>
+      {!isRecording && (
+        <Typography level="h2">Squat Final Count: {squatFinalCount}</Typography>
+      )}
     </>
   );
 }
