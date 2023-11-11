@@ -18,7 +18,7 @@ function SquatChallenge() {
   const [previousAcceleration, setPreviousAcceleration] = useState(0);
 
   const squatThreshold = -1;
-  const squatMinTime = 2500;
+  const squatMinTime = 1500;
   const movingAverageAlpha = 0.8;
 
   const startRecording = () => {
@@ -28,7 +28,7 @@ function SquatChallenge() {
     }
   };
 
-  const debouncedHandleSquat = debounce((squat) => {
+  const debouncedHandleSquat = debounce(() => {
     let squatTime = new Date().getTime();
     if (
       lastSquatTime === null ||
@@ -37,7 +37,7 @@ function SquatChallenge() {
       setSquatCount((prevSquatCount) => prevSquatCount + 1);
       setLastSquatTime(squatTime);
     }
-  }, 100);
+  }, 1000);
 
   const handleMotionEvent = (event) => {
     const motionData = {
