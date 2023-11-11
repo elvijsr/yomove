@@ -11,7 +11,10 @@ function Layout() {
     localStorage.getItem("username") || ""
   );
   const [showPopup, setShowPopup] = useState(false);
-  const [permissionGranted, setPermissionGranted] = useState(localStorage.getItem("permissionGranted") || typeof DeviceMotionEvent.requestPermission !== "function");
+  const [permissionGranted, setPermissionGranted] = useState(
+    localStorage.getItem("permissionGranted") ||
+      typeof DeviceMotionEvent.requestPermission !== "function"
+  );
 
   const navigate = useNavigate();
 
@@ -23,6 +26,19 @@ function Layout() {
     if (!username) {
       setShowPopup(true);
     }
+
+    // Function to handle the storage change event
+    const handleStorageChange = (event) => {
+      if (event.key === "permissionGranted") {
+        setPermissionGranted(event.newValue);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, [username]);
 
   const handleUsernameSubmit = async (newUsername) => {
