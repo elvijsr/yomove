@@ -1,113 +1,103 @@
-import React, { useState, useEffect } from "react";
-import { Typography, Button, ButtonGroup } from "@mui/joy";
+import { useState, useEffect } from "react";
+import { Typography, Button } from "@mui/joy";
 
 function SquatChallenge() {
-  const [isRecording, setIsRecording] = useState(false);
-  const [countdown, setCountdown] = useState(null);
-  const [recordingTimer, setRecordingTimer] = useState(null);
-  const [squatCount, setSquatCount] = useState(0);
-  const [squatTimestamp, setSquatTimestamp] = useState(null);
+ const [deviceMotion, setDeviceMotion] = useState({
+  acceleration: {
+    x: 0,
+    y: 0,
+    z: 0,
+  },
+ });
+ const [isRecording, setIsRecording] = useState(false);
+ const [squatCount, setSquatCount] = useState(0);
+ const [countdown, setCountdown] = useState(null);
+ const [recordingTimer, setRecordingTimer] = useState(null);
+ const [lastSquatTime, setLastSquatTime] = useState(null);
 
-  const squatThreshold = -10;
-  const timeInterval = 1000;
+ const squatThreshold = -10;
+ const squatMinTime = 2000;
 
-  const startRecording = () => {
-    if (countdown === null || countdown === 0) {
-      setSquatCount(0);
-      setCountdown(3);
-    }
+ const startRecording = () => {
+  if (countdown === null || countdown === 0) {
+    setSquatCount(0);
+    setCountdown(3);
+  }
+ };
+
+ const handleMotionEvent = (event) => {
+  const motionData = {
+    acceleration: {
+      x: event.acceleration.x?.toFixed(2),
+      y: event.acceleration.y?.toFixed(2),
+      z: event.acceleration.z?.toFixed(2),
+    },
   };
 
-  const detectSquat = (yAcceleration) => {
-    const timestamp = performance.now();
+  const currentTime = new Date().getTime();
 
-    setSquatTimestamp((prevTimestamp) => {
-      if (prevTimestamp === null || timestamp - prevTimestamp > timeInterval) {
-        return timestamp;
-      }
-      return prevTimestamp;
-    });
+  if (motionData.acceleration.y < squatThreshold && isRecording) {
+    if (lastSquatTime === null || currentTime - lastSquatTime > squatMinTime) {
+      setSquatCount((prevSquatCount) => prevSquatCount + 1);
+      setLastSquatTime(currentTime);
+    }
+  }
 
-    const hasDetectedSquatRecently = timestamp - squatTimestamp < timeInterval;
+  setDeviceMotion(motionData);
+ };
 
-    const isSquat =
-      yAcceleration < squatThreshold &&
-      !hasDetectedSquatRecently;
+ useEffect(() => {
+  if (countdown > 0) {
+    const timer = setTimeout(() => {
+      setCountdown((prevCountdown) => prevCountdown - 1);
+    }, 1000);
+    return () => clearTimeout(timer);
+  } else if (countdown === 0) {
+    setIsRecording(true);
+    setRecordingTimer(10);
+  }
+ }, [countdown]);
 
-    return isSquat;
+ useEffect(() => {
+  if (recordingTimer !== null && recordingTimer !== 0 && isRecording) {
+    const timer = setTimeout(() => {
+      setRecordingTimer((prevRecordingTimer) => prevRecordingTimer - 1);
+    }, 1000);
+    return () => clearTimeout(timer);
+  } else if (recordingTimer === 0) {
+    setIsRecording(false);
+  }
+ }, [recordingTimer]);
+
+ useEffect(() => {
+  window.addEventListener("devicemotion", handleMotionEvent, true);
+
+  return () => {
+    window.removeEventListener("devicemotion", handleMotionEvent);
   };
+ }, [isRecording]);
 
-  const handleMotionEvent = (event) => {
-    const yAcceleration = event.acceleration.y;
+ return (
+  <>
+    <Button
+      onClick={startRecording}
+      disabled={isRecording || countdown > 0}
+    >
+      Start Recording
+    </Button>
 
-    const isSquat = detectSquat(yAcceleration);
+    {countdown !== null && countdown !== 0 && (
+      <Typography level="h2">Countdown: {countdown}</Typography>
+    )}
+    {recordingTimer !== null && recordingTimer !== 0 && (
+      <Typography level="h2">Recording: {recordingTimer}</Typography>
+    )}
 
-    if (isRecording && isSquat) {
-      setSquatCount((prevCount) => prevCount + 1);
-    }
-  };
-
-  useEffect(() => {
-    if (countdown > 0) {
-      const timer = setTimeout(() => {
-        setCountdown((prevCountdown) => prevCountdown - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else if (countdown === 0) {
-      setIsRecording(true);
-      setRecordingTimer(10);
-    }
-  }, [countdown]);
-
-  useEffect(() => {
-    if (recordingTimer !== null && recordingTimer !== 0 && isRecording) {
-      const timer = setTimeout(() => {
-        setRecordingTimer((prevRecordingTimer) => prevRecordingTimer - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else if (recordingTimer === 0) {
-      setIsRecording(false);
-    }
-  }, [recordingTimer, isRecording]);
-
-  useEffect(() => {
-    if (isRecording) {
-        window.addEventListener("devicemotion", handleMotionEvent, true);
-    }
-
-    return () => {
-      window.removeEventListener("devicemotion", handleMotionEvent);
-    };
-  }, [isRecording]);
-
-  return (
-    <>
-      <ButtonGroup
-        variant="contained"
-        aria-label="outlined primary button group"
-        sx={{ mt: 5 }}
-      >
-        <Button
-          onClick={startRecording}
-          disabled={isRecording || countdown > 0}
-        >
-          Start Recording
-        </Button>
-      </ButtonGroup>
-
-      {countdown !== null && countdown !== 0 && (
-        <Typography level="h2">Countdown: {countdown}</Typography>
-      )}
-      {recordingTimer !== null && recordingTimer !== 0 && (
-        <Typography level="h2">Recording: {recordingTimer}</Typography>
-      )}
-
-      {!isRecording && (
-        <Typography level="h2">Squat Count: {squatCount}</Typography>
-      )}
-      <Typography level="h2">Squat timestamp: {squatTimestamp}</Typography>
-    </>
-  );
+    {!isRecording && (
+      <Typography level="h2">Squat Count: {squatCount}</Typography>
+    )}
+  </>
+ );
 }
 
 export default SquatChallenge;
