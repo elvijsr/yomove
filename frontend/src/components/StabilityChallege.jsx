@@ -74,7 +74,7 @@ function StabilityChallenge({ lobby, finishChallenge }) {
     const finalScore = Math.round(average);
 
     try {
-      const result = await submitResult({
+      await submitResult({
         lobby_id: lobby.id,
         challenge_id: lobby.current_challenge.id,
         score: finalScore,
