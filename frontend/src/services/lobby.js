@@ -11,14 +11,44 @@ const createLobby = async (challenge_id) => {
   }
 };
 
-const getLobby = async (lobby_id) => {
+const getLobby = async (lobby_name) => {
   try {
-    const response = await apiPost("/get-lobby", { lobby_id });
-    return response; // contains lobby id
+    const response = await apiPost("/get-lobby", { lobby_name });
+    return response;
   } catch (error) {
     console.error("Failed to fetch lobbies", error);
     throw error;
   }
 };
 
-export { createLobby, getLobby };
+const joinLobby = async (lobby_id) => {
+  try {
+    const response = await apiPost("/join-lobby", { lobby_id });
+    return response;
+  } catch (error) {
+    console.error("Failed to join lobby", error);
+    throw error;
+  }
+};
+
+const leaveLobby = async (lobby_id) => {
+  try {
+    const response = await apiPost("/leave-lobby", { lobby_id });
+    return response;
+  } catch (error) {
+    console.error("Failed to leave lobby", error);
+    throw error;
+  }
+};
+
+const finishLobby = async (lobby_id) => {
+  try {
+    const response = await apiPost("/finish-lobby", { lobby_id });
+    return response;
+  } catch (error) {
+    console.error("Failed to finish lobby", error);
+    throw error;
+  }
+};
+
+export { createLobby, getLobby, joinLobby, leaveLobby, finishLobby };
