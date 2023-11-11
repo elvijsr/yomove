@@ -1,13 +1,13 @@
 import { useOutletContext } from "react-router-dom";
-import { Typography } from "@mui/joy";
+import { Typography, Box } from "@mui/joy";
 
 function Profile() {
   const { username } = useOutletContext();
 
   return (
-    <>
-      <Typography level="h1">{username} profile</Typography>
-    </>
+    <Box>
+      <Typography level="h4">{username} profile</Typography>
+    </Box>
   );
 }
 

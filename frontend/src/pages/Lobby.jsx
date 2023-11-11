@@ -26,10 +26,12 @@ function Lobby() {
   }, []);
 
   return (
-    <Box sx={{ m: 1 }}>
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        {lobbyData.users.length > 0 && (
-          <Card>
+    <Box
+      sx={{ m: 1, height: "100%", display: "flex", flexDirection: "column" }}
+    >
+      {lobbyData.users.length > 0 && (
+        <Card variant="flat">
+          {!challengeStarted && (
             <Box
               sx={{
                 display: "flex",
@@ -40,44 +42,47 @@ function Lobby() {
                 aspectRatio: "1/1",
               }}
             ></Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Typography level="h1">
-                {lobbyData.lobby.current_challenge.challenge_name}
-              </Typography>
-              <Typography level="h4">
-                {lobbyData.lobby.current_challenge.description}
-              </Typography>
-            </Box>
-          </Card>
-        )}
-        {!challengeStarted ? (
+          )}
           <Box
             sx={{
               display: "flex",
-              flex: 1,
               flexDirection: "column",
-              width: "100%",
+              alignItems: "center",
             }}
           >
-            <Typography level="h1">Players</Typography>
+            <Typography level="h1">
+              {lobbyData.lobby.current_challenge.challenge_name}
+            </Typography>
+            <Typography level="h4">
+              {lobbyData.lobby.current_challenge.description}
+            </Typography>
+          </Box>
+        </Card>
+      )}
+      {!challengeStarted ? (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+          }}
+        >
+          <Typography level="h1">Players</Typography>
+          <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
             {lobbyData.users.length > 0 &&
               lobbyData.users.map((user) => (
-                <Typography level="h2">{user.username}</Typography>
+                <Typography key={user.id} level="h2">
+                  {user.username}
+                </Typography>
               ))}
-            <Button sx={{ fontSize: 30 }} onClick={startChallenge}>
-              LET'S GO
-            </Button>
           </Box>
-        ) : (
-          <StabilityChallenge />
-        )}
-      </Box>
+          <Button sx={{ fontSize: 30 }} onClick={startChallenge}>
+            LET'S GO
+          </Button>
+        </Box>
+      ) : (
+        <StabilityChallenge lobbyId={lobbyData.lobby.id} />
+      )}
     </Box>
   );
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
-import { Modal, Box, Button } from "@mui/joy";
+import { Outlet, useNavigate } from "react-router-dom";
+import { Modal, Box, Button, Typography } from "@mui/joy";
 import UsernamePopup from "../components/UsernamePopup";
 import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
@@ -11,6 +11,12 @@ function Layout() {
     localStorage.getItem("username") || ""
   );
   const [showPopup, setShowPopup] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/profile");
+  };
 
   useEffect(() => {
     if (!username) {
@@ -44,7 +50,9 @@ function Layout() {
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         {username && (
           <>
-            <Box>{username}</Box>
+            <Box onClick={handleClick} sx={{ cursor: "pointer" }}>
+              <Typography level="h4">{username}</Typography>
+            </Box>
             <Button variant="outlined" onClick={handleLogout}>
               Logout
             </Button>
