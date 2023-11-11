@@ -31,8 +31,8 @@ function SquatChallenge() {
   const debouncedHandleSquat = debounce(() => {
     let squatTime = new Date().getTime();
     if (
-      lastSquatTime === null ||
-      squatTime - lastSquatTime > squatMinTime
+      isRecording &&
+      (lastSquatTime === null || squatTime - lastSquatTime > squatMinTime)
     ) {
       setSquatCount((prevSquatCount) => prevSquatCount + 1);
       setLastSquatTime(squatTime);
