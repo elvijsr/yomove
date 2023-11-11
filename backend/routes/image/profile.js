@@ -1,25 +1,11 @@
 const Router = require("koa-router");
 const router = new Router();
-const pgp = require("pg-promise")();
 const bodyParser = require("koa-bodyparser");
 const OpenAI = require("openai");
 // const { v2 as cloudinary } = require('cloudinary');
 const cloudinary = require("cloudinary").v2;
 
 const openai = new OpenAI();
-
-// Database connection details
-console.log(process.env.DB_HOST);
-const connection = {
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-};
-
-// Create the database instance
-const db = pgp(connection);
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,

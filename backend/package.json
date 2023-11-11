@@ -18,6 +18,6 @@
         "koa-logger": "^3.2.1",
         "koa-router": "^12.0.0",
         "openai": "^4.17.4",
-        "pg-promise": "^11.5.0"
+        "pg-promise": "^11.5.4"
     }
 }
