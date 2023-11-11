@@ -37,7 +37,7 @@ function SquatChallenge() {
       setSquatCount((prevSquatCount) => prevSquatCount + 1);
       setLastSquatTime(squatTime);
     }
-  }, 700);
+  }, 800);
 
   const handleMotionEvent = (event) => {
     const motionData = {
