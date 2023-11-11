@@ -224,4 +224,56 @@ router.post("/finish-lobby", async (ctx) => {
   }
 });
 
+router.post("/next-challenge", async (ctx) => {
+  try {
+    const { lobby_id } = ctx.request.body;
+
+    if (!lobby_id) {
+      ctx.status = 400; // Bad Request
+      ctx.body = { error: "Invalid lobby_id" };
+      return;
+    }
+
+    // select a random challenge that has not been completed in the current lobby
+    const challenge = await db.oneOrNone(
+      `
+      SELECT c.id
+      FROM challenges c
+      WHERE NOT EXISTS (
+        SELECT 1
+        FROM results r
+        WHERE r.challenge_id = c.id AND r.lobby_id = $1
+      )
+      ORDER BY RANDOM()
+      LIMIT 1
+    `,
+      [lobby_id]
+    );
+
+    if (!challenge) {
+      ctx.status = 404;
+      ctx.body = { error: "No new challenges available" };
+      return;
+    }
+    await db.none(
+      `
+      UPDATE lobbies
+      SET current_challenge = $1
+      WHERE id = $2
+    `,
+      [challenge.id, lobby_id]
+    );
+
+    ctx.status = 200;
+    ctx.body = {
+      message: "Next challenge set successfully",
+      challengeId: challenge.id,
+    };
+  } catch (error) {
+    console.error(error);
+    ctx.status = 500; // Internal Server Error
+    ctx.body = { error: "Internal server error" };
+  }
+});
+
 module.exports = router;
