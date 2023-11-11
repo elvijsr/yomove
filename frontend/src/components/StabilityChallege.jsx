@@ -3,7 +3,7 @@ import { Typography, Button, ButtonGroup, Box, Card } from "@mui/joy";
 import ChallengeImage from "../assets/challenges/flamingo.jpeg";
 import { submitResult } from "../services/challenges";
 
-function StabilityChallenge({ lobby, recordingChallenge }) {
+function StabilityChallenge({ lobby, finishChallenge }) {
   const [deviceMotion, setDeviceMotion] = useState({
     acceleration: {
       x: 0,
@@ -80,7 +80,7 @@ function StabilityChallenge({ lobby, recordingChallenge }) {
         challenge_id: lobby.current_challenge.id,
         score: finalScore,
       });
-      recordingChallenge(false);
+      finishChallenge();
     } catch (error) {
       console.error("Error submitting score:", error);
     }

@@ -94,7 +94,7 @@ function Lobby() {
                     {user.username}
                   </Typography>
                   <Typography key={user.id} level="h2">
-                    {JSON.stringify(user.score)}
+                    {user.score ? user.score : "WAITING"}
                   </Typography>
                 </Box>
               ))}
