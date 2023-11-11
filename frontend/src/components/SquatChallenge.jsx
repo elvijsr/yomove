@@ -21,7 +21,6 @@ function SquatChallenge() {
 
     const isSquat =
       acceleration.y < squatThreshold &&
-      acceleration.z < squatThreshold &&
       acceleration.timestamp - lastSquatTimestamp > squatDuration;
 
     return isSquat;
