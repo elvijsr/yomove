@@ -77,12 +77,6 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <CssVarsProvider theme={theme}>
-      <Typography
-        sx={{ color: theme.colorSchemes.light.palette.gradient.primary }}
-        level="h1"
-      >
-        YoMove!
-      </Typography>
       <RouterProvider router={router} />
     </CssVarsProvider>
   </React.StrictMode>
