@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import Layout from "./pages/Layout.jsx";
 import Profile from "./pages/Profile.jsx";
 import StabilityChallenge from "./components/StabilityChallege.jsx";
+import Home from "./pages/Home.jsx";
 import { Typography } from "@mui/joy";
 import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
 import "@fontsource/nunito/900-italic.css";
@@ -18,7 +19,16 @@ const theme = extendTheme({
       WebkitBackgroundClip: "text",
       WebkitTextFillColor: "transparent",
     },
+    h3: {
+      color: "white",
+    },
     h2: {
+      background:
+        "linear-gradient(90deg, rgba(255,179,71,1) 0%, rgba(255,204,51,1) 100%);",
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+    },
+    h4: {
       background:
         "linear-gradient(90deg, rgba(255,179,71,1) 0%, rgba(255,204,51,1) 100%);",
       WebkitBackgroundClip: "text",
@@ -54,6 +64,8 @@ const theme = extendTheme({
   },
 });
 
+export default theme;
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -61,6 +73,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
+        element: <Home />,
+      },
+      {
+        path: "/test",
         element: <App />,
       },
       {

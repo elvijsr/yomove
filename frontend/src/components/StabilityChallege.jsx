@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Typography, Button, ButtonGroup } from "@mui/joy";
+import { Typography, Button, ButtonGroup, Box } from "@mui/joy";
 
 function StabilityChallenge() {
   const [deviceMotion, setDeviceMotion] = useState({
@@ -154,18 +154,47 @@ function StabilityChallenge() {
     }
   }, [isRecording, deviceMotion]);
 
+  const challenge = {
+    name: "Flamingo",
+    description:
+      "Stand on one leg and spread arms to the sides. Hold your balance as steady as possible for 30 seconds.",
+    img: "",
+  };
   return (
-    <>
+    <Box sx={{ backgroundColor: "red" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          mt: 20,
+          backgroundImage: "",
+        }}
+      >
+        <Typography level="h1" sx={{ fontSize: 60 }}>
+          {challenge.name}
+        </Typography>
+        <Typography level="h4" sx={{ textAlign: "center" }}>
+          {challenge.description}
+        </Typography>
+      </Box>
       <ButtonGroup
         variant="contained"
         aria-label="outlined primary button group"
-        sx={{ mt: 5 }}
+        sx={{
+          mt: 5,
+          position: "fixed",
+          bottom: 0,
+          width: "100%",
+          backgroundColor: "red",
+        }}
       >
         <Button
           onClick={startRecording}
           disabled={isRecording || countdown > 0}
+          sx={{ width: "100%", fontSize: 50, color: "white" }}
         >
-          Start Recording
+          START
         </Button>
       </ButtonGroup>
 
@@ -179,7 +208,7 @@ function StabilityChallenge() {
       {!isRecording && recordedData.length > 0 && (
         <Typography level="h2">Score: {calculateStabilityScore()}</Typography>
       )}
-    </>
+    </Box>
   );
 }
 
