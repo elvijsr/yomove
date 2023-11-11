@@ -114,13 +114,21 @@ router.post("/get-lobby", async (ctx, next) => {
 
     // Query to retrieve all users in the lobby
     const usersQuery = `
-      SELECT u.id, u.username, r.score
-      FROM public.users u
-      JOIN public.user_lobby_participation ulp ON ulp.user_id = u.id
-      LEFT JOIN results r on r.user_id = u.id AND r.lobby_id = ulp.lobby_id AND r.challenge_id = $2
-      WHERE ulp.lobby_id = (select id from lobbies where lobby_name = $1)
-      ORDER by r.id DESC 
-      LIMIT 1
+      SELECT 
+        u.id, 
+        u.username, 
+        r.score,
+        CAST((SELECT SUM(r.score) FROM public.results r WHERE r.user_id = u.id AND r.lobby_id = ulp.lobby_id) AS INTEGER) AS total_score
+      FROM 
+        public.users u
+      JOIN 
+        public.user_lobby_participation ulp ON ulp.user_id = u.id
+      LEFT JOIN 
+        results r ON r.user_id = u.id AND r.lobby_id = ulp.lobby_id AND r.challenge_id = $2
+      WHERE 
+        ulp.lobby_id = (SELECT id FROM lobbies WHERE lobby_name = $1)
+      ORDER BY 
+        r.id DESC
     `;
 
     const users = await db.any(usersQuery, [lobby_name, lobby.challenge_id]);
