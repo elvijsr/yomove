@@ -17,9 +17,9 @@ function SquatChallenge() {
   const [lastSquatTime, setLastSquatTime] = useState(null);
   const [previousAcceleration, setPreviousAcceleration] = useState(0);
 
-  const squatThreshold = -1; // This value may need to be adjusted based on the specific behavior of the device's accelerometer
-  const squatMinTime = 3000; // Minimum time between squats in milliseconds
-  const movingAverageAlpha = 0.8; // Adjust this value to change the smoothing effect
+  const squatThreshold = -1;
+  const squatMinTime = 2500;
+  const movingAverageAlpha = 0.8;
 
   const startRecording = () => {
     if (countdown === null || countdown === 0) {
@@ -36,7 +36,7 @@ function SquatChallenge() {
       setSquatCount((prevSquatCount) => prevSquatCount + 1);
       setLastSquatTime(new Date().getTime());
     }
-  }, 500); // Debounce time in milliseconds
+  }, 500);
 
   const handleMotionEvent = (event) => {
     const motionData = {
@@ -109,10 +109,7 @@ function SquatChallenge() {
         <Typography level="h2">Recording: {recordingTimer}</Typography>
       )}
 
-      {!isRecording && (
-        <Typography level="h2">Squat Count: {squatCount}</Typography>
-      )}
-      <Typography level="h2">Last squat time: {lastSquatTime}</Typography>
+      <Typography level="h2">Squat Count: {squatCount}</Typography>
     </>
   );
 }
