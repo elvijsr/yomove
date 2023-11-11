@@ -106,7 +106,7 @@ function App() {
         y = calculateY(prevDeviceMotion.acceleration, motionData.acceleration);
         z = calculateZ(prevDeviceMotion.acceleration, motionData.acceleration);
         rms = calculateRMS(prevDeviceMotion.acceleration, motionData.acceleration);
-        score = calculateScore(rmsValue);
+        score = calculateScore(rms);
         return ({
         acceleration: {
           x: x,
