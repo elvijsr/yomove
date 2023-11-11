@@ -85,11 +85,11 @@ router.post("/create-lobby", async (ctx, next) => {
 
 router.post("/get-lobby", async (ctx, next) => {
   try {
-    const { lobby_id } = ctx.request.body; // Retrieve lobby_id from request body
+    const { lobby_name } = ctx.request.body; // Retrieve lobby_id from request body
 
-    if (!lobby_id || isNaN(parseInt(lobby_id))) {
+    if (!lobby_name || isNaN(parseInt(lobby_name))) {
       ctx.status = 400; // Bad Request
-      ctx.body = { error: "Invalid or missing lobby_id" };
+      ctx.body = { error: "Invalid or missing lobby_name" };
       return;
     }
 
@@ -103,7 +103,7 @@ router.post("/get-lobby", async (ctx, next) => {
       WHERE l.lobby_name = $1
     `;
 
-    const lobby = await db.oneOrNone(lobbyQuery, [lobby_id]);
+    const lobby = await db.oneOrNone(lobbyQuery, [lobby_name]);
 
     // If no lobby is found, return an error
     if (!lobby) {
@@ -120,9 +120,7 @@ router.post("/get-lobby", async (ctx, next) => {
       WHERE ulp.lobby_id = (select id from lobbies where lobby_name = $1)
     `;
 
-    console.log(lobby_id);
-
-    const users = await db.any(usersQuery, [lobby_id]);
+    const users = await db.any(usersQuery, [lobby_name]);
 
     // Constructing the response body with lobby and users information
     ctx.status = 200; // OK
@@ -145,6 +143,77 @@ router.post("/get-lobby", async (ctx, next) => {
       },
       users: users,
     };
+  } catch (error) {
+    console.error(error);
+    ctx.status = 500; // Internal Server Error
+    ctx.body = { error: "Internal server error" };
+  }
+});
+
+router.post("/join-lobby", async (ctx) => {
+  try {
+    const { lobby_id } = ctx.request.body;
+    const username = ctx.get("X-Username");
+
+    if (!lobby_id || !username) {
+      ctx.status = 400; // Bad Request
+      ctx.body = { error: "Invalid lobby_id or username" };
+      return;
+    }
+
+    await db.none(
+      "INSERT INTO user_lobby_participation (user_id, lobby_id) SELECT id, $1 FROM users WHERE username = $2",
+      [lobby_id, username]
+    );
+
+    ctx.status = 200;
+    ctx.body = { message: "User joined the lobby successfully" };
+  } catch (error) {
+    console.error(error);
+    ctx.status = 500; // Internal Server Error
+    ctx.body = { error: "Internal server error" };
+  }
+});
+router.post("/leave-lobby", async (ctx) => {
+  try {
+    const { lobby_id } = ctx.request.body;
+    const username = ctx.get("X-Username");
+
+    if (!lobby_id || !username) {
+      ctx.status = 400; // Bad Request
+      ctx.body = { error: "Invalid lobby_id or username" };
+      return;
+    }
+
+    await db.none(
+      "DELETE FROM user_lobby_participation WHERE lobby_id = $1 AND user_id = (SELECT id FROM users WHERE username = $2)",
+      [lobby_id, username]
+    );
+
+    ctx.status = 200;
+    ctx.body = { message: "User left the lobby successfully" };
+  } catch (error) {
+    console.error(error);
+    ctx.status = 500; // Internal Server Error
+    ctx.body = { error: "Internal server error" };
+  }
+});
+router.post("/finish-lobby", async (ctx) => {
+  try {
+    const { lobby_id } = ctx.request.body;
+
+    if (!lobby_id) {
+      ctx.status = 400; // Bad Request
+      ctx.body = { error: "Invalid lobby_id" };
+      return;
+    }
+
+    await db.none("UPDATE lobbies SET is_active = false WHERE id = $1", [
+      lobby_id,
+    ]);
+
+    ctx.status = 200;
+    ctx.body = { message: "Lobby finished successfully" };
   } catch (error) {
     console.error(error);
     ctx.status = 500; // Internal Server Error
