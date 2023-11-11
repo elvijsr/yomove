@@ -90,11 +90,13 @@ function SquatChallenge() {
   }, [recordingTimer]);
 
   useEffect(() => {
-    window.addEventListener("devicemotion", handleMotionEvent, true);
+    if (isRecording) {
+      window.addEventListener("devicemotion", handleMotionEvent, true);
 
-    return () => {
-      window.removeEventListener("devicemotion", handleMotionEvent);
-    };
+      return () => {
+        window.removeEventListener("devicemotion", handleMotionEvent);
+      };
+    }
   }, [isRecording]);
 
   return (
