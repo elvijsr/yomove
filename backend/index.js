@@ -6,6 +6,7 @@ const cors = require("@koa/cors");
 const testRoute = require("./routes/test/test");
 const imageRoute = require("./routes/image/profile");
 const loginRoute = require("./routes/user/login");
+const meRoute = require("./routes/user/me");
 
 const app = new Index();
 
@@ -18,6 +19,7 @@ app.use(bodyParser());
 app.use(testRoute.routes());
 app.use(imageRoute.routes());
 app.use(loginRoute.routes());
+app.use(meRoute.routes());
 
 // Server
 const PORT = process.env.PORT || 56579;
