@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Typography, Button, ButtonGroup, Box, Card } from "@mui/joy";
 import ChallengeImage from "../assets/challenges/flamingo.jpeg";
+import { submitResult } from "../services/challenges";
 
-function StabilityChallenge() {
+function StabilityChallenge({ lobby, recordingChallenge }) {
   const [deviceMotion, setDeviceMotion] = useState({
     acceleration: {
       x: 0,
@@ -62,7 +63,7 @@ function StabilityChallenge() {
     return ((rmsMax - rms) * 100) / (rmsMax - rmsMin);
   };
 
-  const calculateStabilityScore = () => {
+  const calculateStabilityScore = async () => {
     if (recordedData.length === 0) {
       return 0;
     }
@@ -70,7 +71,19 @@ function StabilityChallenge() {
     const average =
       scores.reduce((sum, value) => sum + value, 0) / scores.length;
 
-    return Math.round(average);
+    const finalScore = Math.round(average);
+
+    try {
+      // Assuming you have lobbyId and challengeId available
+      const result = await submitResult({
+        lobby_id: lobby.id,
+        challenge_id: lobby.current_challenge.id,
+        score: finalScore,
+      });
+      recordingChallenge(false);
+    } catch (error) {
+      console.error("Error submitting score:", error);
+    }
   };
 
   useEffect(() => {
@@ -93,6 +106,7 @@ function StabilityChallenge() {
       return () => clearTimeout(timer);
     } else if (recordingTimer === 0) {
       setIsRecording(false);
+      calculateStabilityScore();
     }
   }, [recordingTimer]);
 
@@ -157,12 +171,6 @@ function StabilityChallenge() {
     }
   }, [isRecording, deviceMotion]);
 
-  const challenge = {
-    name: "Flamingo",
-    description:
-      "Stand on one leg and spread arms to the sides. Hold your balance as steady as possible for 30 seconds.",
-    img: "",
-  };
   return (
     <Box
       sx={{
@@ -248,15 +256,6 @@ function StabilityChallenge() {
                 >
                   <Typography level="h1">Recording</Typography>
                   <Typography level="h1">{recordingTimer}</Typography>
-                </Box>
-              )}
-
-              {!isRecording && recordedData.length > 0 && (
-                <Box>
-                  <Typography level="h1">
-                    Score: {calculateStabilityScore()}
-                  </Typography>
-                  <Button sx={{ width: "100%" }}>FINISH</Button>
                 </Box>
               )}
             </Box>

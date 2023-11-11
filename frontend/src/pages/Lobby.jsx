@@ -9,10 +9,15 @@ import StabilityChallenge from "../components/StabilityChallege";
 function Lobby() {
   const { lobbyParam } = useParams();
   const [lobbyData, setLobbyData] = useState({ lobby: {}, users: [] });
-  const [challengeStarted, setChallengeStarted] = useState(false);
+  const [challengeRecording, setChallengeRecording] = useState(false);
 
-  const startChallenge = () => {
-    setChallengeStarted(true);
+  const recordChallenge = () => {
+    setChallengeRecording(true);
+  };
+
+  const handleFinishChallenge = () => {
+    setChallengeRecording(false);
+    getLobby(lobbyParam);
   };
 
   useEffect(() => {
@@ -23,7 +28,7 @@ function Lobby() {
       .catch((error) => {
         console.error("Error fetching challenges:", error);
       });
-  }, []);
+  }, [lobbyParam]);
 
   return (
     <Box
@@ -31,7 +36,7 @@ function Lobby() {
     >
       {lobbyData.users.length > 0 && (
         <Card variant="flat">
-          {!challengeStarted && (
+          {!challengeRecording && (
             <Box
               sx={{
                 display: "flex",
@@ -59,29 +64,50 @@ function Lobby() {
           </Box>
         </Card>
       )}
-      {!challengeStarted ? (
+      {!challengeRecording ? (
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             flex: 1,
+            gap: 2,
           }}
         >
           <Typography level="h1">Players</Typography>
-          <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              overflowY: "auto",
+              justifyContent: "space-between",
+            }}
+          >
             {lobbyData.users.length > 0 &&
               lobbyData.users.map((user) => (
-                <Typography key={user.id} level="h2">
-                  {user.username}
-                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Typography key={user.id} level="h2">
+                    {user.username}
+                  </Typography>
+                  <Typography key={user.id} level="h2">
+                    {JSON.stringify(user.score)}
+                  </Typography>
+                </Box>
               ))}
           </Box>
-          <Button sx={{ fontSize: 30 }} onClick={startChallenge}>
+          <Button sx={{ fontSize: 30 }} onClick={recordChallenge}>
             LET'S GO
           </Button>
         </Box>
       ) : (
-        <StabilityChallenge lobbyId={lobbyData.lobby.id} />
+        <StabilityChallenge
+          lobby={lobbyData.lobby}
+          finishChallenge={handleFinishChallenge}
+        />
       )}
     </Box>
   );
