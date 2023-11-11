@@ -17,7 +17,7 @@ function SquatChallenge() {
   const [lastSquatTime, setLastSquatTime] = useState(null);
   const [previousAcceleration, setPreviousAcceleration] = useState(0);
 
-  const squatThreshold = -1.5;
+  const squatThreshold = -1;
   const squatMinTime = 2000;
   const movingAverageAlpha = 0.8;
 
