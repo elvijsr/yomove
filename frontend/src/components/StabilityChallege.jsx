@@ -1,6 +1,5 @@
-import { useOutletContext } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Typography, Button, ButtonGroup, Box, Grid } from "@mui/joy";
+import { Typography, Button, ButtonGroup } from "@mui/joy";
 
 function StabilityChallenge() {
   const [deviceMotion, setDeviceMotion] = useState({
@@ -12,7 +11,6 @@ function StabilityChallenge() {
   });
   const [isRecording, setIsRecording] = useState(false);
   const [recordedData, setRecordedData] = useState([]);
-  const { username } = useOutletContext();
   const alpha = 0.8;
   const rmsMax = 2;
   const rmsMin = 0;
@@ -94,9 +92,18 @@ function StabilityChallenge() {
         );
         return {
           acceleration: {
-            x: calculateX(prevDeviceMotion.acceleration, motionData.acceleration),
-            y: calculateY(prevDeviceMotion.acceleration, motionData.acceleration),
-            z: calculateZ(prevDeviceMotion.acceleration, motionData.acceleration),
+            x: calculateX(
+              prevDeviceMotion.acceleration,
+              motionData.acceleration
+            ),
+            y: calculateY(
+              prevDeviceMotion.acceleration,
+              motionData.acceleration
+            ),
+            z: calculateZ(
+              prevDeviceMotion.acceleration,
+              motionData.acceleration
+            ),
             rms: rms,
             score: calculateScore(rms),
           },
@@ -131,11 +138,10 @@ function StabilityChallenge() {
 
   return (
     <>
-      <Typography level="h1">Yo stable, {username}?</Typography>
-      <Box>
         <ButtonGroup
           variant="contained"
           aria-label="outlined primary button group"
+          sx={{ mt: 5 }}
         >
           <Button onClick={startRecording} disabled={isRecording}>
             Start Recording
@@ -145,29 +151,11 @@ function StabilityChallenge() {
           </Button>
         </ButtonGroup>
 
-        <Grid
-          container
-          direction={"column"}
-          alignItems={"center"}
-          spacing={3}
-          sx={{ flexGrow: 1, mt: 1 }}
-          className="sensor-info"
-        >
-          {!isRecording && recordedData.length > 0 && (
-            <Typography level="h2">
-              Stability score: {calculateStabilityScore()}
-            </Typography>
-          )}
-          <Typography level="h2">Device Motion</Typography>
-          <Grid className="acceleration-info">
-            <Typography level="h3">Acceleration</Typography>
-            <Typography>X-axis: {deviceMotion.acceleration?.x} m/s²</Typography>
-            <Typography>Y-axis: {deviceMotion.acceleration?.y} m/s²</Typography>
-            <Typography>Z-axis: {deviceMotion.acceleration?.z} m/s²</Typography>
-            <Typography>RMS: {deviceMotion.acceleration?.rms} m/s²</Typography>
-          </Grid>
-        </Grid>
-      </Box>
+        {!isRecording && recordedData.length > 0 && (
+          <Typography level="h2">
+            Score: {calculateStabilityScore()}
+          </Typography>
+        )}
     </>
   );
 }
