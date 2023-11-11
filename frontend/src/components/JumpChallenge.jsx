@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Typography, Button, ButtonGroup, Box } from "@mui/joy";
 
 function JumpChallenge() {
@@ -13,8 +13,13 @@ function JumpChallenge() {
   const [countdown, setCountdown] = useState(null);
   const [recordingTimer, setRecordingTimer] = useState(null);
   const [peakRMS, setPeakRMS] = useState(0);
+  const isRecordingRef = useRef(isRecording);
 
   const alpha = 0.8;
+
+  useEffect(() => {
+    isRecordingRef.current = isRecording;
+   }, [isRecording]);
 
   const startRecording = () => {
     if (countdown === null || countdown === 0) {
@@ -47,7 +52,7 @@ function JumpChallenge() {
     const sumOfSquares = x ** 2 + y ** 2 + z ** 2;
     const rms = Math.sqrt(sumOfSquares / 3);
 
-    if (isRecording) {
+    if (isRecordingRef.current) {
       setPeakRMS(prevPeakRMS => Math.max(prevPeakRMS, rms));
     }
 
