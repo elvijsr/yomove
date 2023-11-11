@@ -17,23 +17,23 @@ function SquatChallenge() {
 
   const detectSquat = (yAcceleration, timestamp) => {
     let initialDetection = false;
-
-    if (squatTimestamp === null) {
-        setSquatTimestamp(timestamp);
-        initialDetection = true;
-    }
-
+  
+    setSquatTimestamp((prevTimestamp) => {
+      // If squatTimestamp is null or enough time has passed, update the timestamp
+      if (prevTimestamp === null || timestamp - prevTimestamp > 500) {
+        initialDetection = true; // Set initialDetection flag if the timestamp is updated
+        return timestamp;
+      }
+      return prevTimestamp; // Keep the current timestamp
+    });
+  
     // Adjust this threshold based on your sensor data characteristics
     const squatThreshold = -1.5; // Example threshold for downward motion in y-axis
-
+  
     const isSquat =
       yAcceleration < squatThreshold &&
       (initialDetection || timestamp - squatTimestamp > 500); // Minimum time between squats in milliseconds
-
-    if (isSquat) {
-        setSquatTimestamp(timestamp); // Update lastSquatTimestamp
-    }
-
+  
     return isSquat;
   };
 
