@@ -118,20 +118,6 @@ function App() {
         rotationRate: motionData.rotationRate,
         timestamp: motionData.timestamp,
       })});
-
-      if (isRecording) {
-        setRecordedData((prevData) => [
-          ...prevData,
-          {
-            x: x,
-            y: y,
-            z: z,
-            rms: rms,
-            score: score,
-            timestamp: motionData.timestamp,
-          },
-        ]);
-      }
     };
 
     const handleOrientationEvent = (event) => {
@@ -158,6 +144,22 @@ function App() {
       }
     };
   }, [isRecording, permissionGranted]);
+
+  useEffect(() => {
+    if (isRecording) {
+      setRecordedData((prevData) => [
+        ...prevData,
+        {
+          x: deviceMotion.acceleration.x,
+          y: deviceMotion.acceleration.y,
+          z: deviceMotion.acceleration.z,
+          rms: deviceMotion.acceleration.rms,
+          score: deviceMotion.acceleration.score,
+          timestamp: deviceMotion.acceleration.timestamp,
+        },
+      ]);
+    }
+  }, [isRecording, deviceMotion]);
 
   const startRecording = () => {
     setIsRecording(prevIsRecording => !prevIsRecording);
