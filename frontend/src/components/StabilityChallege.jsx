@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Typography, Button, ButtonGroup, Box } from "@mui/joy";
+import { Typography, Button, ButtonGroup, Box, Card } from "@mui/joy";
+import ChallengeImage from "../assets/challenges/flamingo.jpeg";
 
 function StabilityChallenge() {
   const [deviceMotion, setDeviceMotion] = useState({
@@ -13,6 +14,7 @@ function StabilityChallenge() {
   const [recordedData, setRecordedData] = useState([]);
   const [countdown, setCountdown] = useState(null);
   const [recordingTimer, setRecordingTimer] = useState(null);
+  const [challengeStarted, setChallengeStarted] = useState(false);
 
   const alpha = 0.8;
   const rmsMax = 2;
@@ -20,6 +22,7 @@ function StabilityChallenge() {
 
   const startRecording = () => {
     if (countdown === null || countdown === 0) {
+      setChallengeStarted(true);
       setRecordedData([]);
       setCountdown(3);
     }
@@ -161,53 +164,105 @@ function StabilityChallenge() {
     img: "",
   };
   return (
-    <Box sx={{ backgroundColor: "red" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Box
         sx={{
+          flexGrow: 1,
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          mt: 20,
-          backgroundImage: "",
         }}
       >
-        <Typography level="h1" sx={{ fontSize: 60 }}>
-          {challenge.name}
-        </Typography>
-        <Typography level="h4" sx={{ textAlign: "center" }}>
-          {challenge.description}
-        </Typography>
-      </Box>
-      <ButtonGroup
-        variant="contained"
-        aria-label="outlined primary button group"
-        sx={{
-          mt: 5,
-          position: "fixed",
-          bottom: 0,
-          width: "100%",
-          backgroundColor: "red",
-        }}
-      >
-        <Button
-          onClick={startRecording}
-          disabled={isRecording || countdown > 0}
-          sx={{ width: "100%", fontSize: 50, color: "white" }}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "auto", // Set the height of the container to full viewport height
+            gap: 1,
+            m: 1,
+            flexGrow: 1,
+          }}
         >
-          START
-        </Button>
-      </ButtonGroup>
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "flex-end",
+            }}
+          >
+            {!challengeStarted && (
+              <Button
+                onClick={startRecording}
+                disabled={isRecording || countdown > 0}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  fontSize: 50,
+                  color: "white",
+                }}
+              >
+                RECORD
+              </Button>
+            )}
+            <Box
+              sx={{
+                display: "flex",
+                flex: 1,
+                flexDirection: "column",
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {countdown !== null && countdown !== 0 && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flex: 1,
+                    flexDirection: "column",
+                    height: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography level="h1">GET READY</Typography>
+                  <Typography level="h1">{countdown}</Typography>
+                </Box>
+              )}
+              {recordingTimer !== null && recordingTimer !== 0 && (
+                <Box
+                  sx={{
+                    m: 1,
+                    display: "flex",
+                    flex: 1,
+                    flexDirection: "column",
+                    height: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography level="h1">Recording</Typography>
+                  <Typography level="h1">{recordingTimer}</Typography>
+                </Box>
+              )}
 
-      {countdown !== null && countdown !== 0 && (
-        <Typography level="h2">Countdown: {countdown}</Typography>
-      )}
-      {recordingTimer !== null && recordingTimer !== 0 && (
-        <Typography level="h2">Recording: {recordingTimer}</Typography>
-      )}
-
-      {!isRecording && recordedData.length > 0 && (
-        <Typography level="h2">Score: {calculateStabilityScore()}</Typography>
-      )}
+              {!isRecording && recordedData.length > 0 && (
+                <Box>
+                  <Typography level="h1">
+                    Score: {calculateStabilityScore()}
+                  </Typography>
+                  <Button sx={{ width: "100%" }}>FINISH</Button>
+                </Box>
+              )}
+            </Box>
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 }

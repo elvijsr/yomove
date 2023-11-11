@@ -93,7 +93,7 @@ const router = createBrowserRouter([
         element: <SquatChallenge />,
       },
       {
-        path: "/lobby/:lobbyId",
+        path: "/lobby/:lobbyParam",
         element: <Lobby />,
       },
     ],
