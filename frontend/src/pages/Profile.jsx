@@ -1,11 +1,22 @@
 import { useOutletContext } from "react-router-dom";
-import { Typography, Box, Button } from "@mui/joy";
+import { Typography, Box, Button, ButtonGroup } from "@mui/joy";
 
 function Profile() {
   const { username } = useOutletContext();
 
   const handleLogout = () => {
     localStorage.removeItem("username"); // Remove username from local storage
+  };
+
+  const isIOSDevice = () => {
+    return typeof DeviceMotionEvent.requestPermission === "function";
+  };
+
+  const handleGrantingPermissions = async () => {
+    if (typeof DeviceMotionEvent.requestPermission === "function") {
+      const permissionState = await DeviceMotionEvent.requestPermission();
+      localStorage.setItem("permissionGranted", permissionState === "granted");
+    }
   };
 
   return (
@@ -31,9 +42,16 @@ function Profile() {
       >
         <Typography level="h1">Scores</Typography>
         <Typography level="h1">Settings</Typography>
-        <Button backgroundColor="red" onClick={handleLogout}>
-          DELETE PROFILE
-        </Button>
+        <ButtonGroup orientation="vertical" spacing="1rem">
+          <Button backgroundColor="red" onClick={handleLogout}>
+            DELETE PROFILE
+          </Button>
+          {isIOSDevice && (
+            <Button backgroundColor="red" onClick={handleGrantingPermissions}>
+              REFRESH MOTION PERMISSIONS
+            </Button>
+          )}
+        </ButtonGroup>
       </Box>
     </Box>
   );
