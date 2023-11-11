@@ -191,10 +191,7 @@ function JumpChallenge() {
       )}
 
       {!isRecording && peakRMS > 0 && (
-        <Typography level="h2">
-          Peak RMS: {peakRMS.toFixed(2)}
-          Score: {calculateScore(peakRMS)}
-        </Typography>
+        <Typography level="h2">Score: {calculateScore(peakRMS)}</Typography>
       )}
     </Box>
   );
