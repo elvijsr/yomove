@@ -16,6 +16,8 @@ function App() {
   const [recordedData, setRecordedData] = useState([]);
   const { username } = useOutletContext();
   const alpha = 0.8;
+  const rmsMax = 5;
+  const rmsMin = 0;
 
   const askForPermission = async () => {
     let orientationPermissionGranted = false;
@@ -69,6 +71,14 @@ function App() {
     return rms.toFixed(2);
   };
 
+  const calculateScore = (rms) => {
+    if (rms > rmsMax) {
+      return 0;
+    }
+
+    return ((rmsMax - rms) * 100) / (rmsMax - rmsMin);
+  };
+
   useEffect(() => {
     const handleMotionEvent = (event) => {
       const motionData = {
@@ -85,16 +95,25 @@ function App() {
         timestamp: event.timeStamp,
       };
 
-      let rmsValue;
+      let x;
+      let y;
+      let z;
+      let rms;
+      let score;
 
       setDeviceMotion((prevDeviceMotion) => {
-        rmsValue = calculateRMS(prevDeviceMotion.acceleration, motionData.acceleration);
+        x = calculateX(prevDeviceMotion.acceleration, motionData.acceleration);
+        y = calculateY(prevDeviceMotion.acceleration, motionData.acceleration);
+        z = calculateZ(prevDeviceMotion.acceleration, motionData.acceleration);
+        rms = calculateRMS(prevDeviceMotion.acceleration, motionData.acceleration);
+        score = calculateScore(rmsValue);
         return ({
         acceleration: {
-          x: calculateX(prevDeviceMotion.acceleration, motionData.acceleration),
-          y: calculateY(prevDeviceMotion.acceleration, motionData.acceleration),
-          z: calculateZ(prevDeviceMotion.acceleration, motionData.acceleration),
-          rms: rmsValue,
+          x: x,
+          y: y,
+          z: z,
+          rms: rms,
+          score: score
         },
         rotationRate: motionData.rotationRate,
         timestamp: motionData.timestamp,
@@ -104,10 +123,11 @@ function App() {
         setRecordedData((prevData) => [
           ...prevData,
           {
-            x: motionData.acceleration.x,
-            y: motionData.acceleration.y,
-            z: motionData.acceleration.z,
-            rms: rmsValue,
+            x: x,
+            y: y,
+            z: z,
+            rms: rms,
+            score: score,
             timestamp: motionData.timestamp,
           },
         ]);
@@ -150,10 +170,10 @@ function App() {
 
   const downloadCSV = () => {
     const csvRows = recordedData.map(
-      (data) => `${data.timestamp},${data.x},${data.y},${data.z},${data.rms}`
+      (data) => `${data.timestamp},${data.x},${data.y},${data.z},${data.rms},${data.score}`
     );
     const csvContent =
-      "data:text/csv;charset=utf-8," + "Timestamp,X,Y,Z,RMS\n" + csvRows.join("\n");
+      "data:text/csv;charset=utf-8," + "Timestamp,X,Y,Z,RMS,Score\n" + csvRows.join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
