@@ -16,7 +16,7 @@ function App() {
   const [recordedData, setRecordedData] = useState([]);
   const { username } = useOutletContext();
   const alpha = 0.8;
-  const rmsMax = 5;
+  const rmsMax = 2;
   const rmsMin = 0;
 
   const askForPermission = async () => {
