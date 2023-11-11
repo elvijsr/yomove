@@ -97,7 +97,8 @@ router.post("/get-lobby", async (ctx, next) => {
     const lobbyQuery = `
       SELECT l.id, l.lobby_name, l.is_active, l.current_challenge,
              c.id AS challenge_id, c.challenge_name, c.description,
-             c.created_at AS challenge_created_at, c.start_date, c.end_date, c.image_source
+             c.created_at AS challenge_created_at, c.start_date, c.end_date, c.image_source,
+             (select username from users where id=l.created_by) as created_by
       FROM public.lobbies l
       LEFT JOIN public.challenges c ON l.current_challenge = c.id
       WHERE l.lobby_name = $1
@@ -140,6 +141,7 @@ router.post("/get-lobby", async (ctx, next) => {
         id: lobby.id,
         lobby_name: lobby.lobby_name,
         is_active: lobby.is_active,
+        created_by: lobby.created_by,
         current_challenge: lobby.current_challenge
           ? {
               id: lobby.challenge_id,
