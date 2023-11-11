@@ -51,4 +51,21 @@ const finishLobby = async (lobby_id) => {
   }
 };
 
-export { createLobby, getLobby, joinLobby, leaveLobby, finishLobby };
+const nextChallenge = async (lobby_id) => {
+  try {
+    const response = await apiPost("/next-challenge", { lobby_id });
+    return response;
+  } catch (error) {
+    console.error("Failed to set next challenge", error);
+    throw error;
+  }
+};
+
+export {
+  createLobby,
+  getLobby,
+  joinLobby,
+  leaveLobby,
+  finishLobby,
+  nextChallenge,
+};
