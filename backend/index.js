@@ -8,6 +8,7 @@ const imageRoute = require("./routes/image/profile");
 const loginRoute = require("./routes/user/login");
 const meRoute = require("./routes/user/me");
 const challengesRoute = require("./routes/core/challenges");
+const lobbiesRoute = require("./routes/core/lobbies");
 
 const app = new Index();
 
@@ -22,6 +23,7 @@ app.use(imageRoute.routes());
 app.use(loginRoute.routes());
 app.use(meRoute.routes());
 app.use(challengesRoute.routes());
+app.use(lobbiesRoute.routes());
 
 // Server
 const PORT = process.env.PORT || 56579;
