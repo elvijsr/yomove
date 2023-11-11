@@ -1,5 +1,5 @@
 // services/challenges.js
-import { apiGet } from "../utils/api";
+import { apiGet, apiPost } from "../utils/api";
 
 const fetchChallenges = async () => {
   try {
@@ -11,4 +11,18 @@ const fetchChallenges = async () => {
   }
 };
 
-export { fetchChallenges };
+const submitResult = async ({ lobby_id, challenge_id, score }) => {
+  try {
+    const response = await apiPost("/submit-results", {
+      lobby_id,
+      challenge_id,
+      score,
+    });
+    return response;
+  } catch (error) {
+    console.error("Failed to set next challenge", error);
+    throw error;
+  }
+};
+
+export { fetchChallenges, submitResult };
