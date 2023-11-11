@@ -12,6 +12,7 @@ import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
 import "@fontsource/nunito/900-italic.css";
 import SquatChallenge from "./components/SquatChallenge.jsx";
 import JumpChallenge from "./components/JumpChallenge.jsx";
+import Leaderboard from "./pages/Leaderboard.jsx";
 
 const theme = extendTheme({
   typography: {
@@ -100,6 +101,10 @@ const router = createBrowserRouter([
       {
         path: "/jump",
         element: <JumpChallenge />,
+      },
+      {
+        path: "/leaderboard",
+        element: <Leaderboard />,
       },
     ],
   },
