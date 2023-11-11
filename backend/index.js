@@ -9,6 +9,7 @@ const loginRoute = require("./routes/user/login");
 const meRoute = require("./routes/user/me");
 const challengesRoute = require("./routes/core/challenges");
 const lobbiesRoute = require("./routes/core/lobbies");
+const scoresRoute = require("./routes/core/scores");
 
 const app = new Index();
 
@@ -24,6 +25,7 @@ app.use(loginRoute.routes());
 app.use(meRoute.routes());
 app.use(challengesRoute.routes());
 app.use(lobbiesRoute.routes());
+app.use(scoresRoute.routes());
 
 // Server
 const PORT = process.env.PORT || 56579;
