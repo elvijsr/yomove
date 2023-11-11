@@ -17,7 +17,7 @@ function SquatChallenge() {
   const [lastSquatTime, setLastSquatTime] = useState(null);
   const [previousAcceleration, setPreviousAcceleration] = useState(0);
 
-  const squatThreshold = -2; // This value may need to be adjusted based on the specific behavior of the device's accelerometer
+  const squatThreshold = -1; // This value may need to be adjusted based on the specific behavior of the device's accelerometer
   const squatMinTime = 2000; // Minimum time between squats in milliseconds
   const movingAverageAlpha = 0.8; // Adjust this value to change the smoothing effect
 
