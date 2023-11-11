@@ -183,6 +183,16 @@ function App() {
     link.click();
   };
 
+  const calculateStabilityScore = () => {
+    if (recordedData.length === 0) {
+      return 0;
+    }
+    const scores = recordedData.map((data) => data.score);
+    const average = scores.reduce((sum, value) => sum + value, 0) / scores.length;
+    
+    return Math.round(average);
+  };
+
   return (
     <>
       <Typography level="h1">YoMove, {username}</Typography>
@@ -217,6 +227,9 @@ function App() {
             sx={{ flexGrow: 1, mt: 1 }}
             className="sensor-info"
           >
+            {!isRecording && recordedData.length > 0 && (
+              <Typography level="h2">Stability score: {calculateStabilityScore()}</Typography>
+            )}
             <Typography level="h2">Device Motion</Typography>
             <Grid className="acceleration-info">
               <Typography level="h3">Acceleration</Typography>
