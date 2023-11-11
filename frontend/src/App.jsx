@@ -160,12 +160,12 @@ function App() {
   }, [isRecording, permissionGranted]);
 
   const startRecording = () => {
-    setIsRecording(true);
+    setIsRecording(prevIsRecording => !prevIsRecording);
     setRecordedData([]);
   };
 
   const stopRecording = () => {
-    setIsRecording(false);
+    setIsRecording(prevIsRecording => !prevIsRecording);
   };
 
   const downloadCSV = () => {
