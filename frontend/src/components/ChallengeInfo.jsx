@@ -1,13 +1,27 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Sheet, Input, Button, Typography, Box, Card } from "@mui/joy";
-import FormControl from "@mui/joy/FormControl";
-import FormHelperText from "@mui/joy/FormHelperText";
 import ModalClose from "@mui/joy/ModalClose";
 import ChallangeImage from "../assets/challenges/flamingo.jpeg";
+import { createLobby } from "../services/lobby";
 
 // eslint-disable-next-line react/prop-types
-function ChallengeInfo({ challenge, onClose }) {
+function ChallengeInfo({ challenge }) {
   const [inputValue, setInputValue] = useState("");
+  const [lobbyId, setLobbyId] = useState("");
+  const navigate = useNavigate();
+
+  const handleStartLobby = async () => {
+    try {
+      const response = await createLobby(challenge.id);
+      // Assuming the response contains the lobby ID
+      setLobbyId(response.lobbyName);
+      navigate(`/lobby/${response.lobbyName}`);
+    } catch (error) {
+      console.error("Error creating lobby:", error);
+      // Handle the error, e.g., show an error message to the user
+    }
+  };
 
   return (
     <Sheet
@@ -50,7 +64,9 @@ function ChallengeInfo({ challenge, onClose }) {
         </Box>
       </Card>
 
-      <Button sx={{ fontSize: 30 }}>START CHALLANGE</Button>
+      <Button sx={{ fontSize: 30 }} onClick={handleStartLobby}>
+        START CHALLANGE
+      </Button>
     </Sheet>
   );
 }

@@ -6,6 +6,7 @@ import Layout from "./pages/Layout.jsx";
 import Profile from "./pages/Profile.jsx";
 import StabilityChallenge from "./components/StabilityChallege.jsx";
 import Home from "./pages/Home.jsx";
+import Lobby from "./pages/Lobby.jsx";
 import { Typography } from "@mui/joy";
 import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
 import "@fontsource/nunito/900-italic.css";
@@ -90,6 +91,10 @@ const router = createBrowserRouter([
       {
         path: "/squat",
         element: <SquatChallenge />,
+      },
+      {
+        path: "/lobby/:lobbyId",
+        element: <Lobby />,
       },
     ],
   },
