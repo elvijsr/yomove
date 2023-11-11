@@ -26,19 +26,6 @@ function Layout() {
     if (!username) {
       setShowPopup(true);
     }
-
-    // Function to handle the storage change event
-    const handleStorageChange = (event) => {
-      if (event.key === "permissionGranted") {
-        setPermissionGranted(event.newValue);
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
   }, [username]);
 
   const handleUsernameSubmit = async (newUsername) => {
