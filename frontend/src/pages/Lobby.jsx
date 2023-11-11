@@ -53,9 +53,13 @@ function Lobby() {
     if (!userAlreadyInLobby) {
       console.log("User not in the lobby. Joining...");
       try {
+        // Join the lobby and immediately fetch updated lobby data
         await joinLobby(lobbyData.lobby.id);
         console.log("Joined lobby");
-        // No need to fetchLobby here; it will be automatically fetched in the next render
+
+        // Fetch lobby data immediately after joining
+        const updatedLobbyData = await getLobby(lobbyData.lobby.id);
+        setLobbyData(updatedLobbyData);
       } catch (error) {
         console.error("Error joining lobby:", error);
       }
@@ -71,7 +75,7 @@ function Lobby() {
     // Set up an interval to fetch lobby data every 5 seconds
     const intervalId = setInterval(() => {
       fetchLobby();
-    }, 5000);
+    }, 3000);
 
     // Join the lobby if not joined after the initial fetch
     if (lobbyData.lobby.id) {
