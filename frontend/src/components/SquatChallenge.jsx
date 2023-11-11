@@ -14,21 +14,24 @@ function SquatChallenge() {
     }
   };
 
-  const detectSquat = (yAcceleration) => {
+  const detectSquat = (yAcceleration, timestamp) => {
     // Adjust this threshold based on your sensor data characteristics
     const squatThreshold = -1.5; // Example threshold for downward motion in y-axis
 
-    const isSquat = yAcceleration < squatThreshold;
+    const isSquat = yAcceleration < squatThreshold && timestamp - lastSquatTimestamp > 500;
     return isSquat;
   };
+
+  let lastSquatTimestamp = 0;
 
   const handleMotionEvent = (event) => {
     const yAcceleration = event.acceleration.y;
 
-    const isSquat = detectSquat(yAcceleration);
+    const isSquat = detectSquat(yAcceleration, event.acceleration.timestamp);
 
     if (isRecording && isSquat) {
       setSquatCount((prevCount) => prevCount + 1);
+      lastSquatTimestamp = event.acceleration.timestamp;
     }
   };
 
