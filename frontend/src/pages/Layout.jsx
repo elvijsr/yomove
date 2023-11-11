@@ -11,6 +11,7 @@ function Layout() {
     localStorage.getItem("username") || ""
   );
   const [showPopup, setShowPopup] = useState(false);
+  const [permissionsGranted, setPermissionsGranted] = useState(false);
 
   const navigate = useNavigate();
 
@@ -29,10 +30,22 @@ function Layout() {
       await login(newUsername);
       localStorage.setItem("username", newUsername);
       setUsername(newUsername);
+
+      await handleGrantingPermissions();
+
       setShowPopup(false);
       toast.success(`Hi ${newUsername}`, { icon: "👏" });
     } catch (error) {
       toast.error(`${error.message}`);
+    }
+  };
+
+  const handleGrantingPermissions = async () => {
+    if (typeof DeviceMotionEvent.requestPermission === "function") {
+      const permissionState = await DeviceMotionEvent.requestPermission();
+      setPermissionsGranted(permissionState === "granted");
+    } else {
+      setPermissionsGranted(true);
     }
   };
 
@@ -56,6 +69,11 @@ function Layout() {
             <Button variant="outlined" onClick={handleLogout}>
               Logout
             </Button>
+            {!permissionsGranted && (
+              <Button variant="outlined" onClick={handleGrantingPermissions}>
+                Enable sensor data
+              </Button>
+            )}
           </>
         )}
       </Box>
