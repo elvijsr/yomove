@@ -38,8 +38,8 @@ const theme = extendTheme({
     },
   },
   fontFamily: {
-    display: "Nunito",
-    body: "Nunito",
+    display: "'Nunito', sans-serif",
+    body: "'Nunito', sans-serif",
   },
   colorSchemes: {
     light: {
