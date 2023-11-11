@@ -112,6 +112,7 @@ function SquatChallenge() {
       {!isRecording && (
         <Typography level="h2">Squat Count: {squatCount}</Typography>
       )}
+      <Typography level="h2">Last squat time: {lastSquatTime}</Typography>
     </>
   );
 }
