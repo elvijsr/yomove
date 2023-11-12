@@ -1,10 +1,24 @@
-import { Typography } from "@mui/joy";
+import { Typography, Card, CardContent, Grid, Avatar } from "@mui/joy";
 
 function DesktopFallback() {
   return (
-    <Typography variant="h2">
-      In order to MoveYo, please use mobile device!
-    </Typography>
+    <>
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Card variant="soft" color="warning">
+          <CardContent>
+            <Typography variant="h2">
+              In order to YoMove, please use mobile device!
+            </Typography>
+          </CardContent>
+        </Card>
+        <Avatar src="https://res.cloudinary.com/dpajrrxiq/image/upload/v1699741218/squat_bejdrv.png" />
+      </Grid>
+    </>
   );
 }
 
