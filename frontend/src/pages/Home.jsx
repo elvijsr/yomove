@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Router, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { Typography, Box, Card, Modal, IconButton } from "@mui/joy";
 import ChallengeInfo from "../components/ChallengeInfo";
 import { fetchChallenges } from "../services/challenges";
@@ -9,14 +9,8 @@ function Home() {
   const { username } = useOutletContext();
 
   const [challenges, setChallenges] = useState([]);
-  const [showPopup, setShowPopup] = useState(false);
-
-  const showInfo = () => {
-    setShowPopup(!showPopup);
-  };
-  const hideInfo = () => {
-    setShowPopup(false);
-  };
+  const [selectedChallenge, setSelectedChallenge] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchChallenges()
@@ -28,6 +22,16 @@ function Home() {
         console.error("Error fetching challenges:", error);
       });
   }, []);
+
+  const openChallengeInfoModal = (challenge) => {
+    setSelectedChallenge(challenge);
+    setIsModalOpen(true);
+  };
+
+  const closeChallengeInfoModal = () => {
+    setSelectedChallenge(null);
+    setIsModalOpen(false);
+  };
 
   return (
     <Box sx={{ m: 1 }}>
@@ -55,6 +59,7 @@ function Home() {
         >
           {challenges.map((challenge) => (
             <Card
+              key={challenge.id}
               variant="soft"
               sx={{
                 display: "flex",
@@ -68,11 +73,8 @@ function Home() {
                 backgroundPosition: "center",
                 borderBottom: "10px solid rgba(0,0,0,0.25)",
               }}
-              onClick={showInfo}
+              onClick={() => openChallengeInfoModal(challenge)}
             >
-              <Modal open={showPopup} onClose={hideInfo}>
-                <ChallengeInfo challenge={challenge} />
-              </Modal>
               <Box
                 sx={{
                   backgroundImage:
@@ -86,6 +88,9 @@ function Home() {
             </Card>
           ))}
         </Box>
+        <Modal open={isModalOpen} onClose={closeChallengeInfoModal}>
+          <ChallengeInfo challenge={selectedChallenge} />
+        </Modal>
       </Box>
     </Box>
   );

@@ -47,7 +47,7 @@ function ChallengeInfo({ challenge }) {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            backgroundImage: `url(${ChallengeImage})`,
+            backgroundImage: `url(${challenge.image_source})`,
             backgroundSize: "cover",
             aspectRatio: "1/1",
           }}
