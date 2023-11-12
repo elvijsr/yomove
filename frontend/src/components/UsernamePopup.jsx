@@ -28,9 +28,10 @@ function UsernamePopup({ onSubmit }) {
       sx={{
         borderRadius: "md",
         maxWidth: "400px",
-        mx: "auto", // Margin left & right auto for centering
-        my: 4, // Margin top & bottom
-        p: 3, // Padding
+        mx: 4,
+        my: 4,
+        mt: 20,
+        p: 3,
         display: "flex",
         flexDirection: "column",
         gap: 2,
