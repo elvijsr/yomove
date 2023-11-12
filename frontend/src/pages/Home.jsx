@@ -11,6 +11,7 @@ import {
 } from "@mui/joy";
 import ChallengeInfo from "../components/ChallengeInfo";
 import { fetchChallenges } from "../services/challenges";
+import { fetchLobbies } from "../services/login.js";
 import theme from "../main.jsx";
 import toast from "react-hot-toast";
 
@@ -19,6 +20,7 @@ function Home() {
   const [selectedChallenge, setSelectedChallenge] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const [lobby, setLobby] = useState(null);
 
   const [inputValue, setInputValue] = useState("");
   const [inputValueValid, setInputValueValid] = useState(true);
@@ -53,6 +55,30 @@ function Home() {
       .catch((error) => {
         console.error("Error fetching challenges:", error);
       });
+
+    const loadLobbies = async () => {
+      try {
+        const lobbyData = await fetchLobbies();
+        if (lobbyData.lobbies.length > 0) {
+          const activeLobbies = lobbyData.lobbies.filter(
+            (lobby) => lobby.is_active
+          );
+          if (activeLobbies.length > 0) {
+            const activeLobbyWithLargestId = activeLobbies.reduce(
+              (prev, current) => {
+                return prev.id > current.id ? prev : current;
+              },
+              { id: -Infinity }
+            );
+            setLobby(activeLobbyWithLargestId);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch lobby:", error);
+      }
+    };
+
+    loadLobbies();
   }, []);
 
   const openChallengeInfoModal = (challenge) => {
@@ -81,9 +107,15 @@ function Home() {
             mb: 1,
           }}
         >
-          <Button sx={{ width: "100%" }} onClick={handleClick} variant="soft">
-            <Typography level="h3">REJOIN LOBBY</Typography>
-          </Button>
+          {lobby && (
+            <Button
+              sx={{ width: "100%" }}
+              onClick={() => navigate(`/lobby/${lobby.lobby_name}`)}
+              variant="soft"
+            >
+              <Typography level="h3">REJOIN LOBBY</Typography>
+            </Button>
+          )}
         </Box>
         <Box
           sx={{
@@ -154,7 +186,6 @@ function Home() {
                   setInputValue(e.target.value);
                   handleInput(e.target.value);
                 }}
-                autoFocus
               />
             </Box>
           </FormControl>
