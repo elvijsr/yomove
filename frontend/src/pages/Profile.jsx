@@ -1,8 +1,11 @@
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { Typography, Box, Button, ButtonGroup } from "@mui/joy";
+import { fetchProfile } from "../services/login";
 
 function Profile() {
   const { username } = useOutletContext();
+  const [profile, setProfile] = useState(null);
 
   const handleLogout = () => {
     localStorage.removeItem("username"); // Remove username from local storage
@@ -18,6 +21,20 @@ function Profile() {
       localStorage.setItem("permissionGranted", permissionState === "granted");
     }
   };
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const profileData = await fetchProfile();
+        setProfile(profileData);
+        console.log(profileData);
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      }
+    };
+
+    loadProfile();
+  }, []);
 
   return (
     <Box

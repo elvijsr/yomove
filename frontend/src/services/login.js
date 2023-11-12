@@ -1,5 +1,5 @@
 // services/challenges.js
-import { apiPost } from "../utils/api";
+import { apiPost, apiGet } from "../utils/api";
 
 const login = async (username) => {
   try {
@@ -11,4 +11,14 @@ const login = async (username) => {
   }
 };
 
-export { login };
+const fetchProfile = async () => {
+  try {
+    const response = await apiGet("/me");
+    return response;
+  } catch (error) {
+    console.error("Failed to fetch challenges", error);
+    throw error;
+  }
+};
+
+export { login, fetchProfile };
