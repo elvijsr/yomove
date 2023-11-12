@@ -86,8 +86,10 @@ function StabilityChallenge({ lobby, finishChallenge }) {
         challenge_id: lobby.current_challenge.id,
         score: finalScore,
       });
-      await getProgression().then(() => {
-        toast.success('You have unlocked new avatar upon completing this challenge!\nVisit your profile to upgrade it!', {duration: 4000});
+      await getProgression().then((data) => {
+        if (data.output.startsWith("Level up!")) {
+          toast.success('You have unlocked new avatar upon completing this challenge!\nVisit your profile to upgrade it!', {duration: 4000});
+        }
       });
       finishChallenge();
     } catch (error) {

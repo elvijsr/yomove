@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Typography, Button, Box } from "@mui/joy";
 import { debounce } from "lodash";
 import { submitResult } from "../services/challenges";
+import { getProgression } from "../services/lobby";
+import toast from "react-hot-toast";
 
 function SquatChallenge({ lobby, finishChallenge }) {
   const [deviceMotion, setDeviceMotion] = useState({
@@ -63,6 +65,11 @@ function SquatChallenge({ lobby, finishChallenge }) {
         lobby_id: lobby.id,
         challenge_id: lobby.current_challenge.id,
         score: finalScore,
+      });
+      await getProgression().then((data) => {
+        if (data.output.startsWith("Level up!")) {
+          toast.success('You have unlocked new avatar upon completing this challenge!\nVisit your profile to upgrade it!', {duration: 4000});
+        }
       });
       console.log("score submitted");
       finishChallenge();
