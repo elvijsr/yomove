@@ -66,6 +66,13 @@ function Lobby() {
       fetchLobby();
     } catch (error) {
       console.error("Error fetching challenges:", error);
+      if (error && error.message === "No new challenges available") {
+        await finishLobby(lobbyData.lobby.id);
+        console.log("No new challenges available");
+      } else {
+        // Handle other errors
+        console.error("Unexpected error:", error);
+      }
     }
   };
 
