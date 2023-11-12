@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { Router, useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { Typography, Box, Card, Button, Modal } from "@mui/joy";
 import { getLobby, joinLobby } from "../services/lobby";
 import Invite from "../components/Invite";
