@@ -3,9 +3,7 @@ import { Router, useOutletContext } from "react-router-dom";
 import { Typography, Box, Card, Modal, IconButton } from "@mui/joy";
 import ChallengeInfo from "../components/ChallengeInfo";
 import { fetchChallenges } from "../services/challenges";
-import ChallengeImage from "../assets/challenges/flamingo.jpeg";
 import theme from "../main.jsx";
-import EmojiEvents from "@mui/icons-material/EmojiEvents";
 
 function Home() {
   const { username } = useOutletContext();
@@ -33,9 +31,6 @@ function Home() {
 
   return (
     <Box sx={{ m: 1 }}>
-      <Modal open={showPopup} onClose={hideInfo}>
-        <ChallengeInfo challenge={challenges[0]} />
-      </Modal>
       <Box
         sx={{
           display: "flex",
@@ -50,9 +45,6 @@ function Home() {
           }}
         >
           <Typography level="h1">Challenges</Typography>
-          <IconButton size="lg">
-            <EmojiEvents sx={{ color: "gold" }} />
-          </IconButton>
         </Box>
         <Box
           sx={{
@@ -78,6 +70,9 @@ function Home() {
               }}
               onClick={showInfo}
             >
+              <Modal open={showPopup} onClose={hideInfo}>
+                <ChallengeInfo challenge={challenge} />
+              </Modal>
               <Box
                 sx={{
                   backgroundImage:

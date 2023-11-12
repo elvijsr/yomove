@@ -60,7 +60,7 @@ function ChallengeInfo({ challenge }) {
           }}
         >
           <Typography level="h1">{challenge.challenge_name}</Typography>
-          <Typography level="h3">{challenge.description}</Typography>
+          <Typography level="h4">{challenge.description}</Typography>
         </Box>
       </Card>
 
