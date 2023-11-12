@@ -107,24 +107,6 @@ function Home() {
             mb: 1,
           }}
         >
-          {lobby && (
-            <Button
-              sx={{ width: "100%" }}
-              onClick={() => navigate(`/lobby/${lobby.lobby_name}`)}
-              variant="soft"
-            >
-              <Typography level="h3">REJOIN LOBBY</Typography>
-            </Button>
-          )}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            mb: 1,
-          }}
-        >
           <Typography level="h1">Challenges</Typography>
           <Button onClick={handleClick} variant="soft">
             🏆
@@ -190,6 +172,24 @@ function Home() {
             </Box>
           </FormControl>
           <Button onClick={handleSubmit}>JOIN</Button>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            mb: 1,
+          }}
+        >
+          {lobby && (
+            <Button
+              sx={{ width: "100%" }}
+              onClick={() => navigate(`/lobby/${lobby.lobby_name}`)}
+              variant="soft"
+            >
+              <Typography level="h3">REJOIN LOBBY</Typography>
+            </Button>
+          )}
         </Box>
         <Modal open={isModalOpen} onClose={closeChallengeInfoModal}>
           <ChallengeInfo challenge={selectedChallenge} />
