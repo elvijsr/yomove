@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext, useParams, useNavigate } from "react-router-dom";
 import { Typography, Box, Card, Button, Modal } from "@mui/joy";
-import { getLobby, joinLobby } from "../services/lobby";
+import {
+  getLobby,
+  joinLobby,
+  leaveLobby,
+  nextChallenge,
+  finishLobby,
+} from "../services/lobby";
 import Invite from "../components/Invite";
 import StabilityChallenge from "../components/StabilityChallege";
 import JumpChallenge from "../components/JumpChallenge";
@@ -13,6 +19,7 @@ function Lobby() {
   const [challengeRecording, setChallengeRecording] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const { username } = useOutletContext();
+  const navigate = useNavigate();
 
   const recordChallenge = () => {
     setChallengeRecording(true);
@@ -27,8 +34,9 @@ function Lobby() {
     try {
       const data = await getLobby(lobbyParam);
       setLobbyData(data);
-      if (data.lobby.admin === localStorage.getItem("username")) {
+      if (data.lobby.created_by === username) {
         setIsAdmin(true);
+        console.log("Is admin:" + isAdmin);
       }
     } catch (error) {
       console.error("Error fetching challenges:", error);
@@ -42,6 +50,40 @@ function Lobby() {
   };
   const hideInvite = () => {
     setShowInvitePopup(false);
+  };
+
+  const handleNextChallenge = async () => {
+    try {
+      console.log(lobbyData.lobby.id);
+      await nextChallenge(lobbyData.lobby.id);
+      fetchLobby();
+    } catch (error) {
+      console.error("Error fetching challenges:", error);
+    }
+  };
+
+  const handleLeaveLobby = async () => {
+    try {
+      console.log(lobbyData.lobby.id);
+      await leaveLobby(lobbyData.lobby.id);
+      navigate("/");
+    } catch (error) {
+      console.error("Error fetching challenges:", error);
+    }
+  };
+
+  const handleEndLobby = async () => {
+    try {
+      console.log(lobbyData.lobby.id);
+      await finishLobby(lobbyData.lobby.id);
+      fetchLobby();
+    } catch (error) {
+      console.error("Error fetching challenges:", error);
+    }
+  };
+
+  const handleGoHome = () => {
+    navigate("/");
   };
 
   const joinLobbyIfNotJoined = async () => {
@@ -168,42 +210,102 @@ function Lobby() {
           }}
         >
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography level="h1">Players</Typography>
-            <Button onClick={showInvite}>INVITE</Button>
+            <Typography level="h1">
+              {lobbyData.lobby.is_active ? "Players" : "Total score"}
+            </Typography>
+            {lobbyData.lobby.is_active && (
+              <Button onClick={showInvite}>INVITE</Button>
+            )}
           </Box>
-          <Box
-            sx={{
-              flexGrow: 1,
-              overflowY: "auto",
-              justifyContent: "space-between",
-            }}
-          >
-            {lobbyData.users.length > 0 &&
-              lobbyData.users.map((user) => (
-                <Box
-                  key={user.id}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Typography key={user.id} level="h2">
-                    {user.username}
-                  </Typography>
-                  <Typography key={user.id} level="h2">
-                    {user.score !== null
-                      ? user.score
-                      : user.score === 0
-                      ? 0
-                      : "WAITING"}
-                  </Typography>
-                </Box>
-              ))}
-          </Box>
-          <Button sx={{ fontSize: 30 }} onClick={recordChallenge}>
-            LET'S GO
-          </Button>
+          {lobbyData.lobby.is_active ? (
+            <Box
+              sx={{
+                flexGrow: 1,
+                overflowY: "auto",
+                justifyContent: "space-between",
+              }}
+            >
+              {lobbyData.users.length > 0 &&
+                lobbyData.users.map((user) => (
+                  <Box
+                    key={user.id}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Typography key={user.id} level="h2">
+                      {user.username}
+                    </Typography>
+                    <Typography key={user.id} level="h2">
+                      {user.score !== null
+                        ? user.score
+                        : user.score === 0
+                        ? 0
+                        : "WAITING"}
+                    </Typography>
+                  </Box>
+                ))}
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                flexGrow: 1,
+                overflowY: "auto",
+                justifyContent: "space-between",
+              }}
+            >
+              {lobbyData.users.length > 0 &&
+                lobbyData.users.map((user) => (
+                  <Box
+                    key={user.id}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Typography key={user.id} level="h2">
+                      {user.username}
+                    </Typography>
+                    <Typography key={user.id} level="h2">
+                      {user.total_score ? user.total_score : "0"}
+                    </Typography>
+                  </Box>
+                ))}
+            </Box>
+          )}
+          {lobbyData.lobby.is_active &&
+            !lobbyData.users.some(
+              (user) => user.username === username && user.score !== null
+            ) && <Button onClick={recordChallenge}>START CHALLENGE</Button>}
+          {lobbyData.lobby.is_active &&
+            isAdmin &&
+            lobbyData.users.every((user) => user.score !== null) && (
+              <Button onClick={handleNextChallenge}>NEXT CHALLENGE</Button>
+            )}
+          {lobbyData.lobby.is_active && !isAdmin && (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              <Typography level="h4">Waiting for admin</Typography>
+              <Button sx={{ width: "100%" }} onClick={handleLeaveLobby}>
+                LEAVE LOBBY
+              </Button>
+            </Box>
+          )}
+          {lobbyData.lobby.is_active && isAdmin && (
+            <Button onClick={handleEndLobby}>FINISH LOBBY</Button>
+          )}
+          {!lobbyData.lobby.is_active && (
+            <Button onClick={handleGoHome}>HOME</Button>
+          )}
         </Box>
       ) : (
         <Box
