@@ -167,7 +167,7 @@ router.post("/setavatar", async (ctx, next) => {
 router.get("/progressionstatus", async (ctx, next) => {
   try {
     // Extract the username from the request headers
-    const username = ctx.request.headers["x-username"];
+    const username = ctx.get("X-Username");
 
     // Check if the username is provided
     if (!username) {
