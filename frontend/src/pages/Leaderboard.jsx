@@ -38,7 +38,7 @@ function Leaderboard() {
   }, []);
 
   return (
-    <>
+    <Box sx={{ m: 1 }}>
       <Box
         sx={{
           display: "flex",
@@ -67,9 +67,9 @@ function Leaderboard() {
           )}
         </Tabs>
 
-        <Button onClick={handleClick} variant="soft" sx={{maxWidth: '40px', maxHeight: '40px', minWidth: '40px', minHeight: '40px'}}>⬅️</Button>
+        <Button onClick={handleClick} variant="soft" sx={{maxWidth: '45px', maxHeight: '45px', minWidth: '45px', minHeight: '45px'}}>⬅️</Button>
       </Box>
-    </>
+    </Box>
   );
 }
 
