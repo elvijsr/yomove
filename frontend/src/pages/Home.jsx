@@ -1,17 +1,44 @@
 import { useEffect, useState } from "react";
-import { useOutletContext, useNavigate } from "react-router-dom";
-import { Typography, Box, Card, Modal, Button } from "@mui/joy";
+import { useNavigate } from "react-router-dom";
+import {
+  Typography,
+  Box,
+  Card,
+  Modal,
+  Button,
+  FormControl,
+  Input,
+} from "@mui/joy";
 import ChallengeInfo from "../components/ChallengeInfo";
 import { fetchChallenges } from "../services/challenges";
 import theme from "../main.jsx";
+import toast from "react-hot-toast";
 
 function Home() {
-  const { username } = useOutletContext();
-
   const [challenges, setChallenges] = useState([]);
   const [selectedChallenge, setSelectedChallenge] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  const [inputValue, setInputValue] = useState("");
+  const [inputValueValid, setInputValueValid] = useState(true);
+
+  const handleInput = (value) => {
+    if (value.length === 5) {
+      setInputValueValid(true);
+    } else {
+      setInputValueValid(false);
+    }
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (inputValueValid) {
+      console.log(inputValue);
+      navigate(`/lobby/${inputValue}`);
+    } else {
+      toast.error("Invite code should be 5 digits");
+    }
+  };
 
   const handleClick = () => {
     navigate("/leaderboard");
@@ -51,12 +78,12 @@ function Home() {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
-            mb: 1
+            mb: 1,
           }}
         >
           <Typography level="h1">Challenges</Typography>
           <Button onClick={handleClick} variant="soft">
-          🏆
+            🏆
           </Button>
         </Box>
         <Box
@@ -96,6 +123,30 @@ function Home() {
               </Box>
             </Card>
           ))}
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            mt: 4,
+            gap: 1,
+          }}
+        >
+          <FormControl sx={{ gap: 1 }}>
+            <Box>
+              <Typography level="h4">Join existing lobby</Typography>
+              <Input
+                value={inputValue}
+                placeholder="Enter 5 digit code"
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                  handleInput(e.target.value);
+                }}
+                autoFocus
+              />
+            </Box>
+          </FormControl>
+          <Button onClick={handleSubmit}>JOIN</Button>
         </Box>
         <Modal open={isModalOpen} onClose={closeChallengeInfoModal}>
           <ChallengeInfo challenge={selectedChallenge} />
