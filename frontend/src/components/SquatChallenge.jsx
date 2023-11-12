@@ -45,7 +45,7 @@ function SquatChallenge({ lobby, finishChallenge }) {
 
   const calculateScore = async () => {
     console.log("calculating score started");
-    let score = 0;
+    let score;
     if (squatFinalCount <= 0) {
       score = 0;
     }
@@ -247,7 +247,7 @@ function SquatChallenge({ lobby, finishChallenge }) {
                 >
                   <Typography level="h1">Recording</Typography>
                   <Typography level="h1">{recordingTimer}</Typography>
-                  <Typography level="h1">Count: {squatFinalCount}</Typography>
+                  <Typography level="h1">Count: {squatCount}</Typography>
                 </Box>
               )}
             </Box>
