@@ -7,12 +7,12 @@ import Profile from "./pages/Profile.jsx";
 import StabilityChallenge from "./components/StabilityChallege.jsx";
 import Home from "./pages/Home.jsx";
 import Lobby from "./pages/Lobby.jsx";
-import { Typography } from "@mui/joy";
 import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
 import "@fontsource/nunito/900-italic.css";
 import SquatChallenge from "./components/SquatChallenge.jsx";
 import JumpChallenge from "./components/JumpChallenge.jsx";
 import Leaderboard from "./pages/Leaderboard.jsx";
+import DesktopFallback from "./pages/DesktopFallback.jsx";
 
 const theme = extendTheme({
   typography: {
@@ -69,10 +69,12 @@ const theme = extendTheme({
 
 export default theme;
 
+const isSmartphone = window.innerWidth < 768;
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: isSmartphone ? <Layout /> : <DesktopFallback/>,
     children: [
       {
         path: "",
