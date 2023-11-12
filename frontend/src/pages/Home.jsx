@@ -108,9 +108,16 @@ function Home() {
           }}
         >
           <Typography level="h1">Challenges</Typography>
-          <Button onClick={handleClick} variant="soft">
+          <Box
+            sx={{
+              p: 2,
+              cursor: "pointer",
+            }}
+            onClick={handleClick}
+            variant="soft"
+          >
             🏆
-          </Button>
+          </Box>
         </Box>
         <Box
           sx={{
