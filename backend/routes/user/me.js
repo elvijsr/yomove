@@ -251,7 +251,7 @@ router.get("/my-lobbies", async (ctx) => {
     }
 
     const userLobbies = await db.any(
-      "SELECT l.* FROM lobbies l INNER JOIN user_lobby_participation ulp ON l.id = ulp.lobby_id INNER JOIN users u ON ulp.user_id = u.id WHERE u.username = $1",
+      "SELECT l.* FROM lobbies l INNER JOIN user_lobby_participation ulp ON l.id = ulp.lobby_id INNER JOIN users u ON ulp.user_id = u.id WHERE u.username = $1 order by l.id desc",
       [username]
     );
 

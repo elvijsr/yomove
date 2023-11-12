@@ -7,11 +7,13 @@ import {
   ButtonGroup,
   Divider,
   Avatar,
+  Chip,
 } from "@mui/joy";
-import { fetchProfile } from "../services/login";
+import { fetchProfile, fetchLobbies } from "../services/login";
 
 function Profile() {
   const [profile, setProfile] = useState(null);
+  const [lobbies, setLobbies] = useState([]);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -63,7 +65,17 @@ function Profile() {
       }
     };
 
+    const loadLobbies = async () => {
+      try {
+        const lobbyData = await fetchLobbies();
+        setLobbies(lobbyData.lobbies.slice(0, 5));
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      }
+    };
+
     loadProfile();
+    loadLobbies();
   }, []);
 
   return (
@@ -138,6 +150,52 @@ function Profile() {
               </Typography>
             )}
           </Box>
+          {lobbies.length > 0 && (
+            <Box>
+              <Typography level="h1">My Lobbies</Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {lobbies.map((item) => {
+                  return (
+                    <Box
+                      key={item.id}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                        my: 1,
+                      }}
+                    >
+                      <Button
+                        onClick={() => navigate(`/lobby/${item.lobby_name}`)}
+                        size="small"
+                      >
+                        {item.lobby_name}
+                      </Button>
+                      <Divider orientation="vertical" />
+                      <Typography level="body-sm">
+                        {item.created_at.slice(0, 10) +
+                          " " +
+                          item.created_at.slice(11, 16)}
+                      </Typography>
+
+                      <Divider orientation="vertical" />
+                      <Typography
+                        level="body-sm"
+                        sx={{ color: item.is_active ? "green" : "red" }}
+                      >
+                        {item.is_active ? "Active" : "Done"}
+                      </Typography>
+                    </Box>
+                  );
+                })}
+              </Box>
+            </Box>
+          )}
           <Typography level="h1">Settings</Typography>
           <ButtonGroup orientation="vertical" spacing="1rem">
             <Button backgroundColor="red" onClick={handleLogout}>

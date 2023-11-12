@@ -21,4 +21,14 @@ const fetchProfile = async () => {
   }
 };
 
-export { login, fetchProfile };
+const fetchLobbies = async () => {
+  try {
+    const response = await apiGet("/my-lobbies");
+    return response;
+  } catch (error) {
+    console.error("Failed to fetch lobbies", error);
+    throw error;
+  }
+};
+
+export { login, fetchProfile, fetchLobbies };
