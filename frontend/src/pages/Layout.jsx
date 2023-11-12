@@ -19,13 +19,14 @@ function Layout() {
 
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate("/profile");
-  };
-
   const getUserProfile = async () => {
     const userProfile = await fetchProfile();
     setUserProfile(userProfile);
+  };
+
+  const handleClick = () => {
+    getUserProfile();
+    navigate("/profile");
   };
 
   const findAvatarUrl = (userProfile) => {
