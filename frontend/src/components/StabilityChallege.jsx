@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Typography, Button, ButtonGroup, Box, Card } from "@mui/joy";
-import ChallengeImage from "../assets/challenges/flamingo.jpeg";
 import { submitResult } from "../services/challenges";
 
 function StabilityChallenge({ lobby, finishChallenge }) {
@@ -72,7 +71,6 @@ function StabilityChallenge({ lobby, finishChallenge }) {
       scores.reduce((sum, value) => sum + value, 0) / scores.length;
 
     const finalScore = Math.round(average);
-    console.log("Final score:", finalScore);
 
     try {
       await submitResult({

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sheet, Input, Button, Typography, Box, Card } from "@mui/joy";
 import ModalClose from "@mui/joy/ModalClose";
-import ChallengeImage from "../assets/challenges/flamingo.jpeg";
 import { createLobby } from "../services/lobby";
 
 // eslint-disable-next-line react/prop-types
