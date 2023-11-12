@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext, useParams, useNavigate } from "react-router-dom";
-import { Typography, Box, Card, Button, Modal } from "@mui/joy";
+import {
+  Typography,
+  Box,
+  Card,
+  Button,
+  Modal,
+  CircularProgress,
+} from "@mui/joy";
 import {
   getLobby,
   joinLobby,
@@ -291,10 +298,10 @@ function Lobby() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: 1,
+                gap: 2,
               }}
             >
-              <Typography level="h4">Waiting for admin</Typography>
+              <CircularProgress color="success" />
               <Button sx={{ width: "100%" }} onClick={handleLeaveLobby}>
                 LEAVE LOBBY
               </Button>
