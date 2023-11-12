@@ -247,6 +247,7 @@ function SquatChallenge({ lobby, finishChallenge }) {
                 >
                   <Typography level="h1">Recording</Typography>
                   <Typography level="h1">{recordingTimer}</Typography>
+                  <Typography level="h1">Count: {squatFinalCount}</Typography>
                 </Box>
               )}
             </Box>

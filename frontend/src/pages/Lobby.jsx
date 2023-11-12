@@ -192,7 +192,11 @@ function Lobby() {
                     {user.username}
                   </Typography>
                   <Typography key={user.id} level="h2">
-                    {user.score ? user.score : "WAITING"}
+                    {user.score !== null
+                      ? user.score
+                      : user.score === 0
+                      ? 0
+                      : "WAITING"}
                   </Typography>
                 </Box>
               ))}
