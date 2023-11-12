@@ -59,7 +59,14 @@ function ChallengeInfo({ challenge }) {
           }}
         >
           <Typography level="h2">{challenge.challenge_name}</Typography>
-          <Typography level="body-md" sx={{ color: "#ffb347" }}>
+          <Typography
+            level="body-md"
+            sx={{
+              color: "#ffb347",
+              height: 100, // Fixed height for the container
+              overflow: "auto",
+            }}
+          >
             {challenge.description}
           </Typography>
         </Box>
