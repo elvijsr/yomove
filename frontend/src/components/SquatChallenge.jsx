@@ -65,7 +65,7 @@ function SquatChallenge({ lobby, finishChallenge }) {
         score: finalScore,
       });
       console.log("score submitted");
-      finishChallenge();
+      //finishChallenge();
     } catch (error) {
       console.error("Error submitting score:", error);
     }
@@ -132,6 +132,7 @@ function SquatChallenge({ lobby, finishChallenge }) {
       };
     } else {
       setSquatFinalCount(squatCount);
+      console.log("f squat amount:" + squatFinalCount);
     }
   }, [isRecording]);
 
