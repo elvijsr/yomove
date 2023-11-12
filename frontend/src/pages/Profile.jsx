@@ -80,9 +80,16 @@ function Profile() {
 
   return (
     <Box>
-      <Box sx={{ display: "flex", width: "100%" }}>
-        <Box sx={{ m: 0 }} />
-        <Button onClick={() => goBack()}>‹ Back</Button>
+      <Box
+        sx={{
+          display: "flex",
+          width: "100%",
+          justifyContent: "flex-end",
+        }}
+      >
+        <Button sx={{ m: 2 }} onClick={() => goBack()}>
+          <Typography level="h5">‹ Back</Typography>
+        </Button>
       </Box>
       <Box
         sx={{
@@ -152,7 +159,7 @@ function Profile() {
             )}
           </Box>
           {lobbies.length > 0 && (
-            <Box>
+            <Box sx={{ my: 2 }}>
               <Typography level="h1">My Lobbies</Typography>
               <Box
                 sx={{
@@ -175,7 +182,7 @@ function Profile() {
                         onClick={() => navigate(`/lobby/${item.lobby_name}`)}
                         size="small"
                       >
-                        {item.lobby_name}
+                        <Typography level="h3">{item.lobby_name}</Typography>
                       </Button>
                       <Divider orientation="vertical" />
                       <Typography level="body-sm">
@@ -198,13 +205,13 @@ function Profile() {
             </Box>
           )}
           <Typography level="h1">Settings</Typography>
-          <ButtonGroup orientation="vertical" spacing="1rem">
+          <ButtonGroup orientation="vertical" spacing="1rem" sx={{ my: 1 }}>
             <Button backgroundColor="red" onClick={handleLogout}>
-              DELETE PROFILE
+              <Typography>DELETE PROFILE</Typography>
             </Button>
             {isIOSDevice && (
               <Button backgroundColor="red" onClick={handleGrantingPermissions}>
-                REFRESH MOTION PERMISSIONS
+                <Typography>REFRESH MOTION PERMISSIONS</Typography>
               </Button>
             )}
           </ButtonGroup>
