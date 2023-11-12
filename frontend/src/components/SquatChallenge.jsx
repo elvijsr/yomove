@@ -45,15 +45,15 @@ function SquatChallenge({ lobby, finishChallenge }) {
 
   const calculateScore = async () => {
     console.log("calculating score started");
-    let score;
+    let finalScore;
     if (squatCount <= 0) {
-      score = 0;
+      finalScore = 0;
+    } else if (squatCount >= 10) {
+      finalScore = 100;
+    } else {
+      console.log("squat amount:" + squatFinalCount);
+      finalScore = squatCount * 10;
     }
-    if (squatCount >= 10) {
-      score = 100;
-    }
-    console.log("squat amount:" + squatFinalCount);
-    const finalScore = score * 10;
     console.log(finalScore);
     try {
       console.log("trying");
