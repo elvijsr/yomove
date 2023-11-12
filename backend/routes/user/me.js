@@ -226,6 +226,9 @@ router.get("/progressionstatus", async (ctx, next) => {
         [user.id, newAvatar.id]
       );
 
+      // Update the users table avatar_id value
+      await db.none("UPDATE users SET avatar_id = $1 WHERE id = $2", [newAvatar.id, user.id]);
+
       // Return level-up message
       ctx.body = { output: `Level up! Level: ${user.level + 1}` };
     }
@@ -234,5 +237,7 @@ router.get("/progressionstatus", async (ctx, next) => {
     ctx.body = { error: "Error processing request" };
   }
 });
+
+
 
 module.exports = router;
