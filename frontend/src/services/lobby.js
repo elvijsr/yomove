@@ -1,5 +1,5 @@
 // services/challenges.js
-import { apiPost } from "../utils/api";
+import { apiPost, apiGet } from "../utils/api";
 
 const createLobby = async (challenge_id) => {
   try {
@@ -61,6 +61,16 @@ const nextChallenge = async (lobby_id) => {
   }
 };
 
+const getProgression = async () => {
+  try {
+    const response = await apiGet("/progressionstatus");
+    return response;
+  } catch (error) {
+    console.error("Failed to get progression", error);
+    throw error;
+  }
+};
+
 export {
   createLobby,
   getLobby,
@@ -68,4 +78,5 @@ export {
   leaveLobby,
   finishLobby,
   nextChallenge,
+  getProgression,
 };
