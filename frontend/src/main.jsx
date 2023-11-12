@@ -74,7 +74,7 @@ const isSmartphone = window.innerWidth < 768;
 const router = createBrowserRouter([
   {
     path: "/",
-    element: isSmartphone ? <Layout /> : <DesktopFallback/>,
+    element: isSmartphone ? <Layout /> : <DesktopFallback />,
     children: [
       {
         path: "",
