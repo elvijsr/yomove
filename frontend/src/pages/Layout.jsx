@@ -69,12 +69,6 @@ function Layout() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("username"); // Remove username from local storage
-    setUsername(""); // Reset username state
-    setShowPopup(true); // Show the popup again to allow login
-  };
-
   const adjustAvatarUrl = (avatarSrc) => {
     const urlParts = avatarSrc.split("/");
 
@@ -94,15 +88,15 @@ function Layout() {
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         {username && (
           <>
-            <Box onClick={handleClick} sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}>
+            <Box
+              onClick={handleClick}
+              sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+            >
               {userProfile !== null && (
                 <Avatar src={adjustAvatarUrl(findAvatarUrl(userProfile))} />
               )}
               <Typography level="h4">{username}</Typography>
             </Box>
-            <Button variant="outlined" onClick={handleLogout}>
-              Logout
-            </Button>
             {!permissionGranted && (
               <Button variant="outlined" onClick={handleGrantingPermissions}>
                 Enable sensor data
