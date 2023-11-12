@@ -137,31 +137,6 @@ function SquatChallenge({ lobby, finishChallenge }) {
   }, [isRecording, squatCount]);
 
   return (
-    /*
-    <>
-      <Button onClick={startRecording} disabled={isRecording || countdown > 0}>
-        Start Recording
-      </Button>
-
-      {countdown !== null && countdown !== 0 && (
-        <Typography level="h2">Countdown: {countdown}</Typography>
-      )}
-      {recordingTimer !== null && recordingTimer !== 0 && (
-        <Typography level="h2">Recording: {recordingTimer}</Typography>
-      )}
-
-      {!isRecording && squatFinalCount !== null && (
-        <>
-          <Typography level="h2">
-            Squat Final Count: {squatFinalCount}
-          </Typography>
-          <Typography level="h2">
-            Challenge score: {calculateScore(squatFinalCount)}
-          </Typography>
-        </>
-      )}
-    </>*/
-
     <Box
       sx={{
         display: "flex",
@@ -248,8 +223,6 @@ function SquatChallenge({ lobby, finishChallenge }) {
                 >
                   <Typography level="h1">Recording</Typography>
                   <Typography level="h1">{recordingTimer}</Typography>
-                  <Typography level="h1">Count: {squatCount}</Typography>
-                  <Typography level="h1">FCount: {squatFinalCount}</Typography>
                 </Box>
               )}
             </Box>
