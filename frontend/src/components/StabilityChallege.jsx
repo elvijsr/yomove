@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Typography, Button, ButtonGroup, Box, Card } from "@mui/joy";
-import ChallengeImage from "../assets/challenges/flamingo.jpeg";
 import { submitResult } from "../services/challenges";
 
 function StabilityChallenge({ lobby, finishChallenge }) {

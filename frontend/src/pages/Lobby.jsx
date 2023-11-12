@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import { Typography, Box, Card, Button, Modal } from "@mui/joy";
 import { getLobby, joinLobby } from "../services/lobby";
 import Invite from "../components/Invite";
-import ChallengeImage from "../assets/challenges/flamingo.jpeg";
 import StabilityChallenge from "../components/StabilityChallege";
+import JumpChallenge from "../components/JumpChallenge";
+import SquatChallenge from "../components/SquatChallenge";
 
 function Lobby() {
   const { lobbyParam } = useParams();
@@ -71,6 +71,13 @@ function Lobby() {
     }
   };
 
+  const challengeComponents = {
+    1: StabilityChallenge,
+    2: SquatChallenge,
+    3: JumpChallenge,
+    4: StabilityChallenge,
+  };
+
   useEffect(() => {
     // Always fetch lobby data when the component mounts
     fetchLobby();
@@ -91,36 +98,61 @@ function Lobby() {
 
   return (
     <Box
-      sx={{ m: 1, height: "100%", display: "flex", flexDirection: "column" }}
+      sx={{
+        m: 1,
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+      }}
     >
       <Modal open={showInvitePopup} onClose={hideInvite}>
         <Invite lobby={lobbyData} />
       </Modal>
       {lobbyData.users.length > 0 && (
-        <Card variant="flat">
-          {!challengeRecording && (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                backgroundImage: `url(${ChallengeImage})`,
-                backgroundSize: "cover",
-                aspectRatio: "1/1",
-              }}
-            ></Box>
-          )}
+        <Card
+          variant="soft"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            backgroundImage: `url(${lobbyData.lobby.current_challenge.image_source})`,
+            backgroundSize: "cover",
+            aspectRatio: "1/1",
+            overflow: "hidden",
+            "::before": {
+              content: '""',
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the alpha value for darkness
+            },
+          }}
+        >
+          {!challengeRecording && <Box></Box>}
           <Box
             sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1,
+              color: "#fff",
+              textAlign: "center",
+              gap: 2,
             }}
           >
             <Typography level="h1">
               {lobbyData.lobby.current_challenge.challenge_name}
             </Typography>
-            <Typography level="h4">
+            <Typography level="h5" sx={{ color: "gold", textAlign: "center" }}>
               {lobbyData.lobby.current_challenge.description}
             </Typography>
           </Box>
@@ -170,10 +202,27 @@ function Lobby() {
           </Button>
         </Box>
       ) : (
-        <StabilityChallenge
-          lobby={lobbyData.lobby}
-          finishChallenge={handleFinishChallenge}
-        />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+            gap: 2,
+          }}
+        >
+          {lobbyData.lobby.current_challenge &&
+          lobbyData.lobby.current_challenge.id in challengeComponents ? (
+            React.createElement(
+              challengeComponents[lobbyData.lobby.current_challenge.id],
+              {
+                lobby: lobbyData.lobby,
+                finishChallenge: handleFinishChallenge,
+              }
+            )
+          ) : (
+            <Box>Error: Unknown Challenge</Box>
+          )}
+        </Box>
       )}
     </Box>
   );
