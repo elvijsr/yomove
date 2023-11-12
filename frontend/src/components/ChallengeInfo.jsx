@@ -27,7 +27,7 @@ function ChallengeInfo({ challenge }) {
       sx={{
         borderRadius: "md",
         maxWidth: "400px",
-        mx: "auto", // Margin left & right auto for centering
+        mx: 2, // Margin left & right auto for centering
         my: 4, // Margin top & bottom
         p: 3, // Padding
         display: "flex",
@@ -58,8 +58,10 @@ function ChallengeInfo({ challenge }) {
             alignItems: "center",
           }}
         >
-          <Typography level="h1">{challenge.challenge_name}</Typography>
-          <Typography level="h4">{challenge.description}</Typography>
+          <Typography level="h2">{challenge.challenge_name}</Typography>
+          <Typography level="body-md" sx={{ color: "#ffb347" }}>
+            {challenge.description}
+          </Typography>
         </Box>
       </Card>
 
