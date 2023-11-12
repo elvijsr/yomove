@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Typography, Button, ButtonGroup, Box, Card } from "@mui/joy";
 import { submitResult } from "../services/challenges";
 import { getProgression } from "../services/lobby";
+import toast from "react-hot-toast";
 
 function StabilityChallenge({ lobby, finishChallenge }) {
   const [deviceMotion, setDeviceMotion] = useState({
@@ -85,7 +86,9 @@ function StabilityChallenge({ lobby, finishChallenge }) {
         challenge_id: lobby.current_challenge.id,
         score: finalScore,
       });
-      await getProgression();
+      await getProgression().then(() => {
+        toast.success('You have unlocked new avatar upon completing this challenge!\nVisit your profile to upgrade it!');
+      });
       finishChallenge();
     } catch (error) {
       console.error("Error submitting score:", error);
