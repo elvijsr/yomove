@@ -80,9 +80,9 @@ function Profile() {
 
   return (
     <Box>
-      <Box sx={{ display: "flex" }}>
-        <Box sx={{ flexGrow: 1 }} />
-        <Button onClick={() => goBack()}>Back</Button>
+      <Box sx={{ display: "flex", width: "100%" }}>
+        <Box sx={{ m: 0 }} />
+        <Button onClick={() => goBack()}>‹ Back</Button>
       </Box>
       <Box
         sx={{
@@ -91,6 +91,7 @@ function Profile() {
           alignItems: "center",
           m: 2,
           height: "100%",
+          gap: 2,
         }}
       >
         <Box
@@ -124,7 +125,7 @@ function Profile() {
             width: "100%",
           }}
         >
-          <Typography level="h1">Top Scores</Typography>
+          <Typography level="h1">My Top Scores</Typography>
           <Box sx={{ my: 1 }}>
             {profile &&
               profile.top_scores.length > 0 &&
