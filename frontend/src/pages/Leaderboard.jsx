@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchScores } from "../services/leaderboard";
-import ChallengeLeaderboard from "./ChallengeLeaderBoard";
+import ChallengeLeaderboard from "./ChallengeLeaderboard";
 import { Tabs, TabList, Tab, TabPanel } from "@mui/joy";
 
 function Leaderboard() {
