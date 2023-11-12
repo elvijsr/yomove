@@ -67,7 +67,7 @@ function Leaderboard() {
           )}
         </Tabs>
 
-        <Button onClick={handleClick} variant="soft" sx={{maxWidth: '45px', maxHeight: '45px', minWidth: '45px', minHeight: '45px'}}>⬅️</Button>
+        <Button onClick={handleClick} variant="soft" sx={{maxWidth: '45px', maxHeight: '45px', minWidth: '45px', minHeight: '45px'}}>&lt;</Button>
       </Box>
     </Box>
   );
