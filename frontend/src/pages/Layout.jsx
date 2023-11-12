@@ -106,7 +106,7 @@ function Layout() {
         )}
       </Box>
       <Outlet context={{ username }} />
-      <Toaster position="bottom-center" />
+      <Toaster />
     </>
   );
 }

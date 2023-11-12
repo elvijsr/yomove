@@ -1,13 +1,12 @@
-import { useNavigate } from "react-router-dom";
 import { Sheet, Input, Button, Typography, Box, Card } from "@mui/joy";
 import ModalClose from "@mui/joy/ModalClose";
+import toast from "react-hot-toast";
 
 // eslint-disable-next-line react/prop-types
 function Invite({ lobby }) {
-  const navigate = useNavigate();
-
   const handleCopyInvite = () => {
     navigator.clipboard.writeText(window.location.toString());
+    toast.success("Invite link copied!");
   };
 
   return (
@@ -15,8 +14,8 @@ function Invite({ lobby }) {
       sx={{
         borderRadius: "md",
         maxWidth: "400px",
-        mx: "auto", // Margin left & right auto for centering
-        my: 4, // Margin top & bottom
+        mx: 4, // Margin left & right auto for centering
+        mt: 20, // Margin top & bottom
         p: 3, // Padding
         display: "flex",
         flexDirection: "column",
