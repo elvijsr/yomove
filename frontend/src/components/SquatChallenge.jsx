@@ -134,7 +134,7 @@ function SquatChallenge({ lobby, finishChallenge }) {
       setSquatFinalCount(squatCount);
       console.log("f squat amount:" + squatFinalCount);
     }
-  }, [isRecording]);
+  }, [isRecording, squatCount]);
 
   return (
     /*
