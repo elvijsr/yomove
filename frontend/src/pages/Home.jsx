@@ -178,7 +178,7 @@ function Home() {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
-            mb: 1,
+            mt: 2,
           }}
         >
           {lobby && (
