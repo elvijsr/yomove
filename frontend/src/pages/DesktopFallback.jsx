@@ -16,7 +16,7 @@ function DesktopFallback() {
             </Typography>
           </CardContent>
         </Card>
-        <Avatar src="https://res.cloudinary.com/dpajrrxiq/image/upload/v1699741218/squat_bejdrv.png" />
+        <Avatar src="https://res.cloudinary.com/dpajrrxiq/image/upload/w_100,h_100,c_fill,q_70/v1699741218/squat_bejdrv.png" />
       </Grid>
     </>
   );
