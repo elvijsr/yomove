@@ -3,7 +3,7 @@ const db = require("../../db");
 const router = new Router();
 
 // Flag to control the behavior when the user already exists
-const returnSuccessOnExistingUser = true;
+const returnSuccessOnExistingUser = false;
 
 router.post("/login", async (ctx) => {
   const { username } = ctx.request.body;
