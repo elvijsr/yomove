@@ -84,7 +84,7 @@ function StabilityChallenge({ lobby, finishChallenge }) {
         challenge_id: lobby.current_challenge.id,
         score: finalScore,
       });
-      finishChallenge();
+      await finishChallenge();
     } catch (error) {
       console.error("Error submitting score:", error);
     }
