@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Typography, Button, ButtonGroup, Box } from "@mui/joy";
+import { submitResult } from "../services/challenges";
 
-function JumpChallenge() {
+function JumpChallenge({ lobby, finishChallenge }) {
   const [deviceMotion, setDeviceMotion] = useState({
     acceleration: {
       x: 0,
@@ -14,6 +15,7 @@ function JumpChallenge() {
   const [recordingTimer, setRecordingTimer] = useState(null);
   const [peakRMS, setPeakRMS] = useState(0);
   const isRecordingRef = useRef(isRecording);
+  const [challengeStarted, setChallengeStarted] = useState(false);
 
   const alpha = 0.8;
 
@@ -23,6 +25,7 @@ function JumpChallenge() {
 
   const startRecording = () => {
     if (countdown === null || countdown === 0) {
+      setChallengeStarted(true);
       setPeakRMS(0);
       setCountdown(3);
     }
@@ -59,7 +62,7 @@ function JumpChallenge() {
     return rms.toFixed(2);
   };
 
-  const calculateScore = (peakRMS) => {
+  const calculateScore = async (peakRMS) => {
     const minRMS = 0;
     const maxRMS = 30;
     const minScore = 0;
@@ -69,7 +72,26 @@ function JumpChallenge() {
       return maxScore;
     }
 
-    return Math.round(((peakRMS - minRMS) / (maxRMS - minRMS)) * (maxScore - minScore) + minScore);
+    let finalScore;
+
+    finalScore = Math.round(
+      ((peakRMS - minRMS) / (maxRMS - minRMS)) * (maxScore - minScore) +
+        minScore
+    );
+    try {
+      console.log("trying");
+      console.log("challenge_id:" + lobby.current_challenge.id);
+      console.log("lobby_id:" + lobby.id);
+      await submitResult({
+        lobby_id: lobby.id,
+        challenge_id: lobby.current_challenge.id,
+        score: finalScore,
+      });
+      console.log("score submitted");
+      finishChallenge();
+    } catch (error) {
+      console.error("Error submitting score:", error);
+    }
   };
 
   useEffect(() => {
@@ -92,6 +114,7 @@ function JumpChallenge() {
       return () => clearTimeout(timer);
     } else if (recordingTimer === 0) {
       setIsRecording(false);
+      calculateScore(peakRMS);
     }
   }, [recordingTimer]);
 
@@ -146,23 +169,101 @@ function JumpChallenge() {
   };
 
   return (
-    <Box sx={{ backgroundColor: "red" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Box
         sx={{
+          flexGrow: 1,
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          mt: 20,
-          backgroundImage: "",
         }}
       >
-        <Typography level="h1" sx={{ fontSize: 60 }}>
-          {challenge.name}
-        </Typography>
-        <Typography level="h4" sx={{ textAlign: "center" }}>
-          {challenge.description}
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "auto", // Set the height of the container to full viewport height
+            gap: 1,
+            m: 1,
+            flexGrow: 1,
+          }}
+        >
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "flex-center",
+            }}
+          >
+            {!challengeStarted && (
+              <Button
+                onClick={startRecording}
+                disabled={isRecording || countdown > 0}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  fontSize: 50,
+                  color: "white",
+                }}
+              >
+                RECORD
+              </Button>
+            )}
+            <Box
+              sx={{
+                display: "flex",
+                flex: 1,
+                flexDirection: "column",
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {countdown !== null && countdown !== 0 && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flex: 1,
+                    flexDirection: "column",
+                    height: "100%",
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography level="h1">GET READY</Typography>
+                  <Typography level="h1">{countdown}</Typography>
+                </Box>
+              )}
+              {recordingTimer !== null && recordingTimer !== 0 && (
+                <Box
+                  sx={{
+                    m: 1,
+                    display: "flex",
+                    flex: 1,
+                    flexDirection: "column",
+                    height: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography level="h1">Recording</Typography>
+                  <Typography level="h1">{recordingTimer}</Typography>
+                </Box>
+              )}
+            </Box>
+          </Box>
+        </Box>
       </Box>
+    </Box>
+    /*
+    <Box sx={{ backgroundColor: "red" }}>
       <ButtonGroup
         variant="contained"
         aria-label="outlined primary button group"
@@ -171,7 +272,6 @@ function JumpChallenge() {
           position: "fixed",
           bottom: 0,
           width: "100%",
-          backgroundColor: "red",
         }}
       >
         <Button
@@ -194,6 +294,7 @@ function JumpChallenge() {
         <Typography level="h2">Score: {calculateScore(peakRMS)}</Typography>
       )}
     </Box>
+    */
   );
 }
 
