@@ -1,8 +1,4 @@
-import React from "react";
-import List from "@mui/joy/List";
-import ListItem from "@mui/joy/ListItem";
-import Avatar from "@mui/joy/Avatar";
-import { ListItemDecorator } from "@mui/joy";
+import { List, ListItem, ListItemDecorator, Avatar } from "@mui/joy";
 
 function ChallengeLeaderboard({ scores }) {
   return (
