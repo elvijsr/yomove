@@ -227,7 +227,10 @@ router.get("/progressionstatus", async (ctx, next) => {
       );
 
       // Update the users table avatar_id value
-      await db.none("UPDATE users SET avatar_id = $1 WHERE id = $2", [newAvatar.id, user.id]);
+      await db.none("UPDATE users SET avatar_id = $1 WHERE id = $2", [
+        newAvatar.id,
+        user.id,
+      ]);
 
       // Return level-up message
       ctx.body = { output: `Level up! Level: ${user.level + 1}` };
@@ -237,7 +240,28 @@ router.get("/progressionstatus", async (ctx, next) => {
     ctx.body = { error: "Error processing request" };
   }
 });
+router.get("/my-lobbies", async (ctx) => {
+  try {
+    const username = ctx.get("X-Username");
 
+    if (!username) {
+      ctx.status = 400; // Bad Request
+      ctx.body = { error: "Username is required" };
+      return;
+    }
 
+    const userLobbies = await db.any(
+      "SELECT l.* FROM lobbies l INNER JOIN user_lobby_participation ulp ON l.id = ulp.lobby_id INNER JOIN users u ON ulp.user_id = u.id WHERE u.username = $1",
+      [username]
+    );
+
+    ctx.status = 200; // OK
+    ctx.body = { lobbies: userLobbies };
+  } catch (error) {
+    console.error(error);
+    ctx.status = 500; // Internal Server Error
+    ctx.body = { error: "Internal server error" };
+  }
+});
 
 module.exports = router;
