@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Modal, Box, Button, Typography } from "@mui/joy";
+import { Modal, Box, Button, Typography, Avatar } from "@mui/joy";
 import UsernamePopup from "../components/UsernamePopup";
 import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
-import { login } from "../services/login";
+import { login, fetchProfile } from "../services/login";
 
 function Layout() {
   const [username, setUsername] = useState(
     localStorage.getItem("username") || ""
   );
+  const [userProfile, setUserProfile] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [permissionGranted, setPermissionGranted] = useState(
     localStorage.getItem("permissionGranted") ||
@@ -22,9 +23,25 @@ function Layout() {
     navigate("/profile");
   };
 
+  const getUserProfile = async () => {
+    const userProfile = await fetchProfile();
+    setUserProfile(userProfile);
+  };
+
+  const findAvatarUrl = (userProfile) => {
+    const avatars = userProfile.data.avatars;
+    const avatarId = parseInt(userProfile.data.avatar_id);
+
+    const avatar = avatars.find((avatar) => avatar.avatar_id === avatarId);
+
+    return avatar ? avatar.url : null;
+  };
+
   useEffect(() => {
     if (!username) {
       setShowPopup(true);
+    } else {
+      getUserProfile();
     }
   }, [username]);
 
@@ -58,6 +75,17 @@ function Layout() {
     setShowPopup(true); // Show the popup again to allow login
   };
 
+  const adjustAvatarUrl = (avatarSrc) => {
+    const urlParts = avatarSrc.split("/");
+
+    const publicId = urlParts[urlParts.length - 1].split(".")[0];
+    const version = urlParts[urlParts.length - 2];
+
+    const newUrl = `https://res.cloudinary.com/dpajrrxiq/image/upload/w_100,h_100,c_fill,q_70/${version}/${publicId}.png`;
+
+    return newUrl;
+  };
+
   return (
     <>
       <Modal open={showPopup}>
@@ -66,7 +94,10 @@ function Layout() {
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         {username && (
           <>
-            <Box onClick={handleClick} sx={{ cursor: "pointer" }}>
+            <Box onClick={handleClick} sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}>
+              {userProfile !== null && (
+                <Avatar src={adjustAvatarUrl(findAvatarUrl(userProfile))} />
+              )}
               <Typography level="h4">{username}</Typography>
             </Box>
             <Button variant="outlined" onClick={handleLogout}>
